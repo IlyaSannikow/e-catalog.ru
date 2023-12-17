@@ -1,13 +1,16 @@
-<mxfile host="app.diagrams.net" modified="2023-12-17T05:14:42.400Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.731 YaBrowser/23.11.1.731 Yowser/2.5 Safari/537.36" etag="mTDaPh24lvLl5rka-e08" version="22.1.11" type="github">
+<mxfile host="app.diagrams.net" modified="2023-12-17T05:16:31.408Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.5993.731 YaBrowser/23.11.1.731 Yowser/2.5 Safari/537.36" etag="Um3MKCxLqBykxNI5TJOH" version="22.1.11" type="github">
   <diagram name="Страница — 1" id="qDOADenVG09ehRUiS6Ex">
     <mxGraphModel dx="1239" dy="1862" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="qDFS0w817NceGPv5ga30-1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="-30" width="1050" height="570" as="geometry" />
+        </mxCell>
         <mxCell id="b5Nr3tDvJ9iHZjcrWxrC-1" value="Гость" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="40" y="40" width="30" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="b5Nr3tDvJ9iHZjcrWxrC-4" value="Клиент" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+        <mxCell id="b5Nr3tDvJ9iHZjcrWxrC-4" value="Пользователь" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
           <mxGeometry x="40" y="140" width="30" height="60" as="geometry" />
         </mxCell>
         <mxCell id="b5Nr3tDvJ9iHZjcrWxrC-5" value="Продавец" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
@@ -218,8 +221,11 @@
         <mxCell id="b5Nr3tDvJ9iHZjcrWxrC-60" value="Сервис для отправки писем на почту" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="839" y="464" width="125" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="qDFS0w817NceGPv5ga30-1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;dashed=1;" vertex="1" parent="1">
-          <mxGeometry x="20" y="-30" width="1050" height="570" as="geometry" />
+        <mxCell id="qDFS0w817NceGPv5ga30-3" value="Модератор" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="330" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="qDFS0w817NceGPv5ga30-4" value="Админ" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="30" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
