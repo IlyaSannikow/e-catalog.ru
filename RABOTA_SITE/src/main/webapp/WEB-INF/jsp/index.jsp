@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
 
 <!DOCTYPE HTML>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Главная</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -20,6 +20,9 @@
     <h4><a href="/logout">Выйти</a></h4>
   </sec:authorize>
   <h4><a href="/admin">Посмотреть/Удалить/Изменить пользователей</a></h4>
+  <h4><a href="/createGroup">Добавить группу</a></h4>
+  <h4><a href="/groupList">Посмотреть/Удалить/Изменить группу</a></h4>
+
 </div>
 </body>
 </html>
