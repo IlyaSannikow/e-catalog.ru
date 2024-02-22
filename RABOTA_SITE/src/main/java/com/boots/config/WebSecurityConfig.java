@@ -29,8 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .disable()
                 .authorizeRequests()
                     .antMatchers("/registration").not().fullyAuthenticated()
-                    .antMatchers("/createPeople/**").hasRole("USER")
-                    .antMatchers("/people/**").hasRole("USER")
+                    .antMatchers("/createGroup/**").hasAnyRole("POLICE","ADMIN")
+                    .antMatchers("/groupList/**").hasRole("POLICE")
                     //Доступ разрешен всем пользователей
                     .antMatchers("/", "/resources/**").permitAll()
                 //Все остальные страницы требуют аутентификации

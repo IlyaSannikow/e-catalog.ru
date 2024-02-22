@@ -20,8 +20,12 @@
     <h4><a href="/logout">Выйти</a></h4>
   </sec:authorize>
   <h4><a href="/admin">Посмотреть/Удалить/Изменить пользователей</a></h4>
+
   <h4><a href="/createGroup">Добавить группу</a></h4>
   <h4><a href="/groupList">Посмотреть/Удалить/Изменить группу</a></h4>
+
+  <h4><a href="/createPost">Добавить пост</a></h4>
+  <h4><a href="/postList">Посмотреть/Удалить/Изменить пост</a></h4>
 
 </div>
 </body>

@@ -2,10 +2,7 @@ package com.boots.service;
 
 
 import com.boots.entity.Group;
-import com.boots.entity.User;
 import com.boots.repository.GroupRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
