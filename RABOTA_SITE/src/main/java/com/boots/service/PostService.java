@@ -29,11 +29,6 @@ public class PostService {
     }
 
     public boolean savePost(@Valid Post post) {
-        Post postFromDB = postRepository.findByName(post.getName());
-
-        if (postFromDB != null) {
-            return false;
-        }
 
         postRepository.save(post);
 

@@ -23,6 +23,7 @@ public class AdminController {
     public String  deleteUser(@RequestParam(required = true, defaultValue = "" ) Long userId,
                               @RequestParam(required = true, defaultValue = "" ) String nickname,
                               @RequestParam(required = true, defaultValue = "" ) String username,
+                              @RequestParam(required = true, defaultValue = "" ) String phoneNumber,
                               @RequestParam(required = true, defaultValue = "" ) String action,
                               Model model) {
         if (action.equals("delete")){
@@ -35,7 +36,7 @@ public class AdminController {
         }
         if (action.equals("update2")){
             User user = userService.findUserById(userId);
-            userService.updateUser(user, nickname, username);
+            userService.updateUser(user, nickname, username, phoneNumber);
         }
 
         return "redirect:/admin";

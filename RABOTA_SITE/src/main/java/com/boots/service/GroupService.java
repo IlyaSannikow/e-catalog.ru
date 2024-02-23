@@ -2,11 +2,14 @@ package com.boots.service;
 
 
 import com.boots.entity.Group;
+import com.boots.entity.Role;
+import com.boots.entity.User;
 import com.boots.repository.GroupRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,6 +38,22 @@ public class GroupService {
             return false;
         }
 
+        groupRepository.save(group);
+
+        return true;
+    }
+
+    public boolean addGroupUsers(Group group, User user){
+
+        group.getUsers().add(user);
+        groupRepository.save(group);
+
+        return true;
+    }
+
+    public boolean removeGroupUsers(Group group, User user){
+
+        group.getUsers().remove(user);
         groupRepository.save(group);
 
         return true;

@@ -14,19 +14,20 @@
   <form:form method="POST" modelAttribute="userForm">
     <h2>Регистрация</h2>
     <div>
-      <form:input type="text" path="nickname" placeholder="Nickname"
-                  autofocus="true"></form:input>
+      <form:input type="text" path="nickname" placeholder="Введите псевдоним" autofocus="true"></form:input>
     </div>
 
     <div>
-      <form:input type="text" path="username" placeholder="Username"
-                  autofocus="true"></form:input>
-      <form:errors path="username"></form:errors>
-        ${usernameError}
+      <form:input type="text" path="username" placeholder="Введите логин" autofocus="true"></form:input>
+      <form:errors path="username"></form:errors>${usernameError}
     </div>
 
     <div>
-      <form:input type="password" path="password" placeholder="Password"></form:input>
+      <form:input type="text" path="phoneNumber" placeholder="Введите номер телефона" autofocus="true"></form:input>
+    </div>
+
+    <div>
+      <form:input type="password" path="password" placeholder="Введите пароль"></form:input>
     </div>
     <button type="submit">Зарегистрироваться</button>
   </form:form>

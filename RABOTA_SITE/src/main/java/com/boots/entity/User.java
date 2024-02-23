@@ -19,12 +19,38 @@ public class User implements UserDetails {
     private String username;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String nickname;
+
+    private String phoneNumber;
     @Size(min=2, message = "Не меньше 5 знаков")
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    @Transient
+    @ManyToMany(mappedBy = "users")
+    private Set<Group> groups;
+
+    public User(Long userId, Long groupId) {
+    }
+
     public User() {
+
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
     }
 
     public Long getId() {

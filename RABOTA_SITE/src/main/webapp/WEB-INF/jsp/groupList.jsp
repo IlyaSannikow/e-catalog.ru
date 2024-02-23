@@ -12,13 +12,19 @@
 
 <body>
 <div>
-  <table>
+  <table display:block>
     <thead>
 
     <th>ID</th>
     <th>Название</th>
-    <th>Удалить</th>
-    <th>Обновить</th>
+    <th>Участники</th>
+    <th>Вступить</th>
+    <th>Выйти из группы</th>
+
+    <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_POLICE')">
+        <th>Удалить</th>
+        <th>Обновить</th>
+    </sec:authorize>
 
     </thead>
 
@@ -29,24 +35,67 @@
         <td>${group.name}</td>
 
         <td>
-           <form action="${pageContext.request.contextPath}/groupList" method="post">
-             <input type="hidden" name="groupId" value="${group.id}"/>
-             <input type="hidden" name="action" value="delete"/>
-             <button type="submit">Удалить</button>
-           </form>
-         </td>
+          <c:forEach items="${group.users}" var="user">
+            Имя: ${user.username} <br>
+            Номер: ${user.phoneNumber} <br>
+            -------------------------- <br>
+          </c:forEach>
+        </td>
 
         <td>
-           <form action="${pageContext.request.contextPath}/groupList" method="post">
-             <input type="hidden" name="groupId" value="${group.id}"/>
-             <input type="hidden" name="action" value="update"/>
-             <button type="submit">Обновить</button>
-           </form>
+            <form action="${pageContext.request.contextPath}/groupList" method="post" modelAttribute="groupForm">
+               <input type="hidden" name="groupId" value="${group.id}"/>
+               <input type="hidden" name="action" value="add"/>
+               <button type="submit">Вступить в группу</button>
+             </form>
          </td>
+
+         <td>
+            <form action="${pageContext.request.contextPath}/groupList" method="post" modelAttribute="groupForm">
+                <input type="hidden" name="groupId" value="${group.id}"/>
+                <input type="hidden" name="action" value="remove"/>
+                <button type="submit">Выйти из группы</button>
+            </form>
+         </td>
+
+        <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_POLICE')">
+            <td>
+               <form action="${pageContext.request.contextPath}/groupList" method="post">
+                 <input type="hidden" name="groupId" value="${group.id}"/>
+                 <input type="hidden" name="action" value="delete"/>
+                 <button type="submit">Удалить группу</button>
+               </form>
+             </td>
+
+            <td>
+               <form action="${pageContext.request.contextPath}/groupList" method="post">
+                 <input type="hidden" name="groupId" value="${group.id}"/>
+                 <input type="hidden" name="action" value="update"/>
+                 <button type="submit">Обновить группу</button>
+               </form>
+            </td>
+        </sec:authorize>
 
       </tr>
     </c:forEach>
   </table>
+
+  <sec:authorize access="hasAnyRole('ROLE_ADMIN','ROLE_POLICE')">
+
+  <h2>Добавить новую группу</h2>
+
+    <div>
+
+        <form action="${pageContext.request.contextPath}/groupList" method="post">
+         <input type="hidden" name="groupId" value="${group.id}"/> <br>
+         <input type="text" name="name" value="${group.name}" placeholder="Введите название группы"/> <br>
+         <input type="hidden" name="action" value="create"/>
+         <button type="submit">Создать группу</button>
+       </form>
+
+    </div>
+
+  </sec:authorize>
   <a href="/">Главная</a>
 </div>
 </body>

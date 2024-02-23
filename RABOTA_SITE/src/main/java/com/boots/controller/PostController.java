@@ -18,43 +18,32 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/createPost")
-    public String registration(Model model) {
-        model.addAttribute("postForm", new Post()); // Ключ, Значение
-
-        return "createPost";
-    }
-
     @GetMapping("/postList")
     public String postList(Model model) {
         model.addAttribute("allPost", postService.allPost()); // Ключ, Значение
+        model.addAttribute("postForm", new Post());
         return "postList";
     }
 
-    @PostMapping("/createPost")
-    public String addPost(@ModelAttribute("postForm") @Valid Post postForm, BindingResult bindingResult, Model model) {
-
-        if (bindingResult.hasErrors()) {
-            return "createPost";
-        }
-        if (!postService.savePost(postForm)){
-            model.addAttribute("postNameError", "Пост с таким именем уже зарегестрирован");
-            return "createPost";
-        }
-
-        return "redirect:/";
-    }
-
     @PostMapping("/postList")
-    public String  deleteProduct(@RequestParam(required = true, defaultValue = "" ) Long postId,
+    public String  deleteProduct(@ModelAttribute("postForm") @Valid Post postForm,
+                                 @RequestParam(required = true, defaultValue = "" ) Long postId,
                                  @RequestParam(required = true, defaultValue = "" ) String name,
 				                 @RequestParam(required = true, defaultValue = "" ) String message,
 				                 @RequestParam(required = true, defaultValue = "" ) String incidentDay,
 				                 @RequestParam(required = true, defaultValue = "" ) String outfit,
 				                 @RequestParam(required = true, defaultValue = "" ) String phoneNumber,
                                  @RequestParam(required = true, defaultValue = "" ) String action,
+                                 BindingResult bindingResult,
                                  Model model) {
+        if (action.equals("create")){
+            if (bindingResult.hasErrors()) {
+                return "postList";
+            }
+            postService.savePost(postForm);
 
+            return "redirect:/postList";
+        }
         if (action.equals("delete")){
             postService.deletePost(postId);
         }

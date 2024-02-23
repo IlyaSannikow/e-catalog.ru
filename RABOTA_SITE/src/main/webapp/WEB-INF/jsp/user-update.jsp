@@ -11,6 +11,7 @@
     <form action="${pageContext.request.contextPath}/admin" method="post">
         <input type="text" name="username" value="${user.username}" placeHolder="Обновить имя пользователя"/> <br>
         <input type="text" name="nickname" value="${user.nickname}" placeHolder="Обновить псевдоним пользователя"/> <br>
+        <input type="text" name="phoneNumber" value="${user.phoneNumber}" placeHolder="Обновить номер телефона"/> <br>
         <input type="hidden" name="userId" value="${user.id}"/> <br>
         <input type="hidden" name="action" value="update2"/>
         <button type="submit">Обновить</button>

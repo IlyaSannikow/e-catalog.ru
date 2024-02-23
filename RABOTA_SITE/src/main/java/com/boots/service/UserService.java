@@ -45,6 +45,10 @@ public class UserService implements UserDetailsService {
         return userFromDb.orElse(new User());
     }
 
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public List<User> allUsers() {
         return userRepository.findAll();
     }
@@ -63,10 +67,11 @@ public class UserService implements UserDetailsService {
         return true;
     }
 
-    public boolean updateUser(User user, String nickname, String username) {
+    public boolean updateUser(User user, String nickname, String username, String phoneNumber) {
 
         user.setUsername(username);
         user.setNickname(nickname);
+        user.setPhoneNumber(phoneNumber);
         userRepository.saveAndFlush(user);
 
         return true;
