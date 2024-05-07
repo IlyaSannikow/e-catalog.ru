@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Товары</title>
+</head>
+
+<body>
+<div>
+    <table>
+        <thead>
+
+        <th>ID</th>
+        <th>Название</th>
+        <th>Категория</th>
+        <th>Стоимость</th>
+        <th>Магазин</th>
+        <th>Страница магазина</th>
+
+        <th>Удалить товар</th>
+        <th>Изменить данные</th>
+
+        </thead>
+
+        <tr th:each="product : ${allProducts}">
+            <td th:text="${product.id}"></td>
+            <td th:text="${product.name}"></td>
+            <td th:text="${product.category.name}"></td>
+            <td th:text="${product.cost}"></td>
+            <td th:text="${product.source}"></td>
+            <td><a th:href="@{/product-info(id=${product.id})}">Страница товара</a></td>
+            <td>
+                <form action="#" th:action="@{/products}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}"/>
+                    <input type="hidden" name="action" value="delete"/>
+                    <button type="submit">Удалить товар</button>
+                </form>
+            </td>
+            <td>
+                <form action="#" th:action="@{/products}" method="post">
+                    <input type="hidden" name="productId" th:value="${product.id}"/>
+                    <input type="hidden" name="action" value="update"/>
+                    <button type="submit">Обновить данные о товаре</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+    <a href="/">Главная</a>
+</div>
+</body>
+</html>
