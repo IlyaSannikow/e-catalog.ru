@@ -1,0 +1,46 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  thymeleaf:
+    prefix: classpath:/public/
+    suffix: .html
+
+  datasource:
+    url: jdbc:postgresql://localhost:5435/postgres?currentSchema=ecatalog_schem
+    username: postgres
+    password: postgres
+
+  jpa:
+    show-sql: true
+    generate-ddl: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8282/realms/ecatalog_realm
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8282/realms/ecatalog_realm
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: ecatalog_client
+            client-secret: eZrLXkaun7kareo4Ks1zWpC64gBXVtLq
+            scope: openid
+            authorization-grant-type: authorization_code
+
+server:
+  port: 8080
