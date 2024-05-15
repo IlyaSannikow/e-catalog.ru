@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Добавить новый товар</title>
+</head>
+
+<body>
+<div>
+    <form action="#" th:object="${productForm}" method="post" enctype="multipart/form-data">
+        <h2>Добавить товар</h2>
+        <div>
+            <input type="text" th:field="*{name}" placeholder="Введите название товара" autofocus="true">
+        </div>
+        <div>
+            <select th:field="*{category}">
+                <option value="">Выберите категорию товара</option>
+                <option th:each="category : ${categoryOptions}" th:value="${category.id}" th:text="${category.name}"></option>
+            </select>
+        </div>
+        <div>
+            <input type="text" th:field="*{source}" placeholder="Введите название продовца">
+        </div>
+        <div>
+            <input type="text" th:field="*{cost}" placeholder="Введите стоимость товара">
+        </div>
+        <div>
+            <input type="file" name="file" accept="image/png, image/jpeg" />
+        </div><br>
+        <button type="submit">Добавить товар</button>
+    </form>
+
+    <a href="/">Главная</a>
+</div>
+</body>
+</html>

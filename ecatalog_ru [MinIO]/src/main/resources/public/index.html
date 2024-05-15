@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+</head>
+<body>
+<h1>Поиск продуктов</h1>
+<form action="/search" method="post">
+    <label for="input">Введите название или категорию продукта:</label><br>
+    <input type="text" id="input" name="input">
+    <button type="submit">Поиск</button>
+</form>
+
+<div style="display: inline-block;">
+    <span style="vertical-align: middle;">Категории:</span>
+    <form action="#" th:action="@{/categorySearch}" method="post" style="margin-top: 10px; display: inline-block;">
+        <div th:each="category, iterStat : ${categoryOptions}" style="margin-left: 5px; display: inline-block;">
+            <button type="submit" name="category" th:value="${category.name}">
+                <span th:text="${category.name}"></span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<p><a href="/admin">Страница админа</a></p>
+<p><a href="/account">Профиль</a></p>
+<p><a href="/create-product">Добавить товар</a></p>
+<p><a href="/compare-products">Сравнение</a></p>
+
+<p><a href="/exit">Logout</a></p>
+</body>
+</html>
