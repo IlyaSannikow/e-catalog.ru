@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+</head>
+<body>
+<div th:if="${isAuthenticated}">
+    <a href="profile.html">Перейти на страницу пользователя</a><br>
+    <div th:if="${#lists.contains(roles, 'ROLE_ADMIN')}">
+        <a href="admin.html">Перейти на страницу админа</a><br>
+    </div>
+    <a href="/logout">Выйти из аккаунта</a>
+</div>
+<div th:if="${!isAuthenticated}">
+    <a href="/logout">Выйти из аккаунта</a>
+    <a href="/login">Войти в аккаунт</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,1 @@
+browser://net-internals/#hsts
