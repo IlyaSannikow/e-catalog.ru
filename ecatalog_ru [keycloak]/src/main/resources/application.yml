@@ -1,0 +1,23 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/public/
+    suffix: .html
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8282/realms/ecatalog_realm
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8282/realms/ecatalog_realm
+            user-name-attribute: preferred_username
+        registration:
+          keycloak:
+            client-id: ecatalog_client
+            client-secret: 0KLlaeuaNicSmGQ45DkXTvdo7zw8oaFj
+            scope: openid
+
+server:
+  port: 8080
