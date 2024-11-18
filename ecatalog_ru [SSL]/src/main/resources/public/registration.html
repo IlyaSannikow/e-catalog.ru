@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+</head>
+<body>
+<form id="registrationForm">
+    <label>
+        Имя пользователя:<br>
+        <input type="text" name="username" placeholder="Username" required><br>
+    </label>
+    <label>
+        Пароль:<br>
+        <input type="password" name="password" placeholder="Password" required><br>
+    </label>
+    <button type="submit">Зарегистрироваться</button>
+</form>
+
+<script>
+    (() => {
+        document.querySelector("form#registrationForm").onsubmit = e => {
+            e.preventDefault();
+
+            const username = document.querySelector("input[name=username]").value;
+            const password = document.querySelector("input[name=password]").value;
+
+            // Отправляем данные для регистрации без CSRF токена
+            fetch('/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            }).then(response => {
+                if (response.ok) {
+                    alert('Registration successful!');
+                } else {
+                    alert('Registration failed. Please try again.');
+                }
+            }).catch(error => {
+                console.error('Error during registration:', error);
+                alert('An error occurred during registration.');
+            });
+        };
+    })();
+</script>
+</body>
+</html>

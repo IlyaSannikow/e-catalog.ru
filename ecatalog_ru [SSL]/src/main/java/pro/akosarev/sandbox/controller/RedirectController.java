@@ -1,42 +1,51 @@
 package pro.akosarev.sandbox.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.stream.Collectors;
+import java.security.Principal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Controller
 public class RedirectController {
-
-    @GetMapping({"/profile.html", "/index.html", "/login"})
-    public String home(Model model, HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = (authentication != null && authentication.isAuthenticated() &&
-                !(authentication instanceof AnonymousAuthenticationToken));
-
-        model.addAttribute("isAuthenticated", isAuthenticated);
-
-        if (isAuthenticated) {
-            var authorities = authentication.getAuthorities();
-            model.addAttribute("roles", authorities.stream()
-                    .map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toList()));
-        }
-
-        // Определяем, какое представление возвращать на основе текущего URL
-        String requestUri = request.getRequestURI();
-
-        if (requestUri.equals("/profile.html")) {
-            return "profile"; // Возвращаем представление для профиля
-        } else {
-            return "index"; // Возвращаем представление для главной страницы
-        }
+    @GetMapping("admin")
+    public String getManagerPage() {
+        return "admin";
     }
+
+    @GetMapping("registration")
+    public String getRegistrationPage() {
+        return "registration";
+    }
+
+    @GetMapping("/index.html")
+    public String index(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        boolean isAuthenticated = false;
+
+        if (authentication != null) {
+            isAuthenticated = authentication.isAuthenticated() &&
+                    !authentication.getAuthorities().stream()
+                            .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ANONYMOUS"));
+
+            model.addAttribute("isAuthenticated", isAuthenticated);
+
+            Set<String> roles = new HashSet<>();
+            if (authentication != null) {
+                authentication.getAuthorities().forEach(authority -> roles.add(authority.getAuthority()));
+            }
+            model.addAttribute("roles", roles);
+        } else {
+            System.out.println("Authentication is null");
+        }
+
+        return "index"; // Имя вашего шаблона
+    }
+
 }

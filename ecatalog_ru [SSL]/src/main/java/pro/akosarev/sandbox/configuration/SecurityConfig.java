@@ -1,90 +1,100 @@
 package pro.akosarev.sandbox.configuration;
 
+import com.nimbusds.jose.crypto.DirectDecrypter;
+import com.nimbusds.jose.crypto.DirectEncrypter;
+import com.nimbusds.jose.jwk.OctetSequenceKey;
+import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
-import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
-import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
-import java.util.stream.Stream;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
+import pro.akosarev.sandbox.entity.User;
 
 @Configuration
 public class SecurityConfig {
-
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LogoutSuccessHandler logoutSuccessHandler) throws Exception {
-        return http
-                .oauth2ResourceServer(oauth2 -> oauth2
-                        .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))) // Здесь связываем converter
-                .oauth2Login(oauthLogin -> oauthLogin
-                        .loginPage("https://localhost:8443/realms/ecatalog_realm/protocol/openid-connect/auth?response_type=code&client_id=ecatalog_client") // Указание кастомной страницы входа
-                        .defaultSuccessUrl("/", true)) // Опционально: перенаправление после успешного входа
-                .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/index.html", "/").permitAll()
-                            .requestMatchers("/admin.html").hasRole("ADMIN")
-                            .anyRequest().authenticated();
-                })
-                .logout(logout -> {
-                    logout
-                        .logoutUrl("/logout") // Задаем URL для выхода
-                        .logoutSuccessUrl("https://localhost:8443/realms/ecatalog_realm/protocol/openid-connect/logout") // URL для перенаправления после выхода
-                        .logoutSuccessHandler(logoutSuccessHandler); // Обработчик успешного выхода
-                })
-                .build();
+    public TokenCookieJweStringSerializer tokenCookieJweStringSerializer(
+            @Value("${jwt.cookie-token-key}") String cookieTokenKey
+    ) throws Exception {
+        return new TokenCookieJweStringSerializer(new DirectEncrypter(
+                OctetSequenceKey.parse(cookieTokenKey)
+        ));
     }
 
     @Bean
-    LogoutSuccessHandler logoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository){
-        OidcClientInitiatedLogoutSuccessHandler handler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
-        handler.setPostLogoutRedirectUri("{baseUrl}/index.html");
-        return handler;
+    public TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer(
+            @Value("${jwt.cookie-token-key}") String cookieTokenKey,
+            JdbcTemplate jdbcTemplate
+    ) throws Exception {
+        return new TokenCookieAuthenticationConfigurer()
+                .tokenCookieStringDeserializer(new TokenCookieJweStringDeserializer(
+                        new DirectDecrypter(
+                                OctetSequenceKey.parse(cookieTokenKey)
+                        )
+                ))
+                .jdbcTemplate(jdbcTemplate);
     }
 
     @Bean
-    public JwtAuthenticationConverter jwtAuthenticationConverter() {
-        var converter = new JwtAuthenticationConverter();
-        var jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        converter.setPrincipalClaimName("preferred_username");
-        converter.setJwtGrantedAuthoritiesConverter(jwt -> {
-            var authorities = jwtGrantedAuthoritiesConverter.convert(jwt);
-            var roles = jwt.getClaimAsStringList("ecatalog_sec_role");
-            return Stream.concat(authorities.stream(),
-                            roles.stream()
-                                    .filter(role -> role.startsWith("ROLE_"))
-                                    .map(SimpleGrantedAuthority::new)
-                                    .map(GrantedAuthority.class::cast))
-                    .toList();
-        });
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer,
+            TokenCookieJweStringSerializer tokenCookieJweStringSerializer) throws Exception {
+        var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
+        tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
 
-        return converter;
+        http.httpBasic(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults())
+                .addFilterAfter(new GetCsrfTokenFilter(), ExceptionTranslationFilter.class)
+                .authorizeHttpRequests(authorizeHttpRequests ->
+                        authorizeHttpRequests
+                                .requestMatchers("/admin").hasRole("ADMIN")
+                                .requestMatchers("/admin").hasRole("USER")
+                                .requestMatchers("/error", "/registration", "/register", "/login",
+                                        "index.html","registration.html").permitAll()
+                                .anyRequest().authenticated())
+                .sessionManagement(sessionManagement -> sessionManagement
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionAuthenticationStrategy(tokenCookieSessionAuthenticationStrategy))
+                .csrf(csrf -> csrf.csrfTokenRepository(new CookieCsrfTokenRepository())
+                        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                        .ignoringRequestMatchers("/register")
+                        .sessionAuthenticationStrategy((authentication, request, response) -> {}))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/index.html"));
+
+        http.apply(tokenCookieAuthenticationConfigurer);
+
+        return http.build();
     }
 
     @Bean
-    public OAuth2UserService<OidcUserRequest, OidcUser> oAuth2UserService() {
-        var oidcUserService = new OidcUserService();
-        return userRequest -> {
-            var oidcUser = oidcUserService.loadUser(userRequest);
-            var roles = oidcUser.getClaimAsStringList("ecatalog_sec_role");
-            var authorities = Stream.concat(oidcUser.getAuthorities().stream(),
-                            roles.stream()
-                                    .filter(role -> role.startsWith("ROLE_"))
-                                    .map(SimpleGrantedAuthority::new)
-                                    .map(GrantedAuthority.class::cast))
-                    .toList();
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-            return new DefaultOidcUser(authorities, oidcUser.getIdToken(), oidcUser.getUserInfo());
+    @Bean
+    public UserDetailsService userDetailsService(EntityManager entityManager) {
+        return username -> {
+            User user = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.authorities WHERE u.username = :username", User.class)
+                    .setParameter("username", username)
+                    .getSingleResult();
+            return user;
         };
     }
 }

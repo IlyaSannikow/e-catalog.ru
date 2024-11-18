@@ -12,7 +12,8 @@
     <loaded-nodes />
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="437ad22b-2be4-4dd0-abfb-0055cbd7cc69">
+    <connection id="7e2b3810-7765-4940-83ef-107fc5262a95">
+      <console name="Connection" type="STANDARD" schema="" session="Main" />
       <console name="ecatalog_conn" type="STANDARD" schema="" session="Main" />
     </connection>
   </component>
@@ -23,45 +24,9 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="public.user_federation_config" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_product_comments" active-filter-id="EMPTY_FILTER">
-      <filter id="6762a2c9-d895-4f12-bb10-b024caf13287" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="comments_id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_user_compare_products" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_product" active-filter-id="EMPTY_FILTER">
-      <filter id="58032159-43d6-4c5d-8e41-b61980fa71c5" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_compare" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="public.client_session_note" active-filter-id="">
-      <filter id="d18836ba-ec6a-488e-a5cf-08dd8fdcdc71" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="client_session" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.user_compare" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="public.user_entity" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="public.client" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_category" active-filter-id="EMPTY_FILTER">
-      <filter id="403a2c22-5e5f-43cf-998b-3bf7e3b9e744" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_path" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_user" active-filter-id="EMPTY_FILTER" />
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="public.redirect_uris" active-filter-id="">
-      <filter id="71faa895-e793-4c91-9a78-a0a0d27157a5" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="client_id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_comment" active-filter-id="EMPTY_FILTER">
-      <filter id="f93af9f6-275d-48b7-9b85-082f983eab86" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
-        <condition column="id" operator="=" value="" active="true" />
-      </filter>
-    </filter-actions>
-    <filter-actions connection-id="76f0da99-395d-4856-983c-27c638ddc1c5" dataset="ecatalog_schem.t_image" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_authority" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_deactivated_token" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
     <retain-sticky-names value="false" />
@@ -83,7 +48,7 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-      <connection id="437ad22b-2be4-4dd0-abfb-0055cbd7cc69" active="true" signed="true">
+      <connection id="7e2b3810-7765-4940-83ef-107fc5262a95" active="true" signed="true">
         <database>
           <name value="ecatalog_conn" />
           <description value="" />
@@ -96,7 +61,7 @@
           <url-type value="DATABASE" />
           <host value="localhost" />
           <port value="5432" />
-          <database value="postgres" />
+          <database value="ecatalog_db" />
           <tns-folder value="" />
           <tns-profile value="" />
           <type value="USER_PASSWORD" />

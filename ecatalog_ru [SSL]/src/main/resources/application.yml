@@ -1,41 +1,30 @@
-kc:
-  base-url: https://localhost:8443
-  realm: ecatalog_realm
-  realm-url: ${kc.base-url}/realms/${kc.realm}
-
 spring:
-  application:
-    name: spring-app
-
   thymeleaf:
     prefix: classpath:/public/
     suffix: .html
 
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: ${kc.realm-url}
-          introspection_uri: ${kc.realm-url}/protocol/openid-connect/token/introspect
-          jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
-      client:
-        provider:
-          keycloak:
-            issuer-uri: ${kc.realm-url}
-            user-name-attribute: preferred_username
-        registration:
-          keycloak:
-            client-id: ecatalog_client
-            client-secret: YytXbEEpZ0MmaCUVHJTtAFW40faPUWOz
-            scope: openid
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecatalog_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  cookie-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
 
 server:
-  port: 8080
-
+  port: 8443
+  http2:
+    enabled: true
   ssl:
     key-store: classpath:docker-ecatalog_ru/certs/keystore.p12
     key-store-password: 12345
-    key-store-type: PKCS12
     key-alias: ecatalog
 
+logging:
+  level:
+    org.springframework.security: trace
 
