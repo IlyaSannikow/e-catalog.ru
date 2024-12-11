@@ -1,0 +1,38 @@
+spring:
+  thymeleaf:
+    prefix: classpath:/public/
+    suffix: .html
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecatalog_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  cookie-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
+
+server:
+  port: 8080
+  http2:
+    enabled: true
+  ssl:
+    key-store: classpath:docker-ecatalog_ru/certs/keystore.p12
+    key-store-password: 12345
+    key-alias: ecatalog
+
+logging:
+  level:
+    org.springframework.security: trace
+
+minio:
+  url: https://localhost:8443
+  access:
+    name: admin
+    secret: adminpass
+  bucket:
+    name: ecatalog-bucket
+
