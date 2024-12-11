@@ -26,10 +26,10 @@ server:
 
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: debug
 
 minio:
-  url: https://localhost:8443
+  url: http://localhost:9000
   access:
     name: admin
     secret: adminpass

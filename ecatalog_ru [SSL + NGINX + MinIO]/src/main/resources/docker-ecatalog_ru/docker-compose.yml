@@ -26,7 +26,6 @@ services:
       - "8443:8443"
       - "8444:8444"
     environment:
-      - "VIRTUAL_HOST=minio.example.com"
       - "VIRTUAL_PORT=8443"
     networks:
       - app-tier

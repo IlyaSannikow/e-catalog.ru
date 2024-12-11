@@ -12,6 +12,5 @@ public class SpringSecurityKeycloakSandbox {
     public static void main(String[] args) throws InterruptedException {
         // Запускаем Spring-приложение
         SpringApplication.run(SpringSecurityKeycloakSandbox.class, args);
-        System.out.println(System.getProperty("java.home"));
     }
 }
