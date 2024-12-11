@@ -1,20 +1,31 @@
 package pro.akosarev.sandbox.controller;
 
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.MinioException;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
+import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.repository.UserInfoRepository;
+import pro.akosarev.sandbox.service.UserService;
 
 import java.io.IOException;
 import java.security.Principal;
 
 @Controller
-public class FileUploadController {
+public class MinIOController {
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserInfoRepository userInfoRepository;
 
     @Autowired
     private MinioClient minioClient;
@@ -27,10 +38,9 @@ public class FileUploadController {
         try {
             if (file.isEmpty()) {
                 model.addAttribute("message", "Please select a file to upload.");
-                return "profile"; // Вернуться к странице загрузки с сообщением
+                return "redirect:/profile";
             }
 
-            // Получить имя пользователя из объекта Principal
             String username = principal.getName();
 
             String originalFilename = file.getOriginalFilename();
@@ -52,6 +62,10 @@ public class FileUploadController {
                             .build()
             );
 
+            User user = userService.findByUsername(username);
+            user.setHaveProfileImage(true);
+            userService.updateUserInfo(user, objectName);
+
         } catch (IOException e) {
             System.out.println("Failed to upload file due to IO error: " + e.getMessage());
         } catch (MinioException e) {
@@ -60,6 +74,23 @@ public class FileUploadController {
             System.out.println("An unexpected error occurred: " + e.getMessage());
         }
 
-        return "profile";
+        return "redirect:/profile";
+    }
+
+    public String getShareableLink(String objectName) {
+        try {
+            // Генерация временной ссылки на объект
+            GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .method(Method.GET) // Указать метод GET
+                    .expiry(60 * 60 * 24) // 1 день
+                    .build();
+
+            return minioClient.getPresignedObjectUrl(args);
+        } catch (Exception e) {
+            System.out.println("Error generating shareable link: " + e.getMessage());
+            return null;
+        }
     }
 }

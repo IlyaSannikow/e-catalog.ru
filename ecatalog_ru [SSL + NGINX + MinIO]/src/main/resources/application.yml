@@ -29,7 +29,7 @@ logging:
     org.springframework.security: debug
 
 minio:
-  url: http://localhost:9000
+  url: http://127.0.0.1:9000 #АДРЕС НЕ МЕНЯТЬ
   access:
     name: admin
     secret: adminpass

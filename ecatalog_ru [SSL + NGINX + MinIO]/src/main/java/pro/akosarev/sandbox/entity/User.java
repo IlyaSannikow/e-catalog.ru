@@ -21,6 +21,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<UserAuthority> authorities; // Список авторизаций
 
+    @OneToOne(mappedBy = "user") // Обратная связь с UserInfo
+    private UserInfo userInfo;
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    private boolean haveProfileImage = false; // Поле для указания наличия профильного изображения
+
     public Long getId() {
         return id;
     }
@@ -33,6 +42,10 @@ public class User implements UserDetails {
         return password;
     }
 
+    public boolean isHaveProfileImage() {
+        return haveProfileImage;
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -43,6 +56,9 @@ public class User implements UserDetails {
 
     public void setAuthorities(List<UserAuthority> authorities) {
         this.authorities = authorities;
+    }
+    public void setHaveProfileImage(boolean haveProfileImage) {
+        this.haveProfileImage = haveProfileImage;
     }
 
     @Override

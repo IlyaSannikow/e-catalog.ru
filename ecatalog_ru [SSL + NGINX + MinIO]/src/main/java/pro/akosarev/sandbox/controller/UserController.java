@@ -3,15 +3,15 @@ package pro.akosarev.sandbox.controller;
 import io.minio.MinioClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.service.UserService;
 
 import java.security.Principal;
 import java.util.HashMap;
@@ -21,6 +21,9 @@ import java.util.Set;
 
 @Controller
 public class UserController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private MinioClient minioClient;
@@ -35,6 +38,7 @@ public class UserController {
 
         boolean isAuthenticated = false;
         Set<String> roles = new HashSet<>();
+        boolean haveProfileImage = false; // новое поле для хранения состояния изображения профиля
 
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getAuthorities().stream()
@@ -56,5 +60,11 @@ public class UserController {
 
         System.out.println("Пароль изменён на: " + newPassword); // Для отладки
         return ResponseEntity.ok("Пароль успешно изменен");
+    }
+
+    @PostMapping("/register")
+    public void register(@RequestBody User user) {
+        // Регистрация нового пользователя
+        userService.registerUser(user);
     }
 }

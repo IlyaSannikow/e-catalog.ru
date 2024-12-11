@@ -3,6 +3,7 @@ package pro.akosarev.sandbox.configuration;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
 import io.minio.errors.MinioException;
+import lombok.Getter;
 import okhttp3.OkHttpClient;
 
 import javax.net.ssl.SSLContext;
@@ -61,4 +62,5 @@ public class MinioConfig {
                 .httpClient(httpClient) // Используем наш кастомный OkHttpClient
                 .build();
     }
+
 }
