@@ -1,0 +1,11 @@
+openssl req -x509 -newkey rsa:2048 -keyout ecatalog-key.key -out ecatalog-cert.crt -days 365 -nodes -sha256 -subj "/CN=localhost/O=My Organization/C=RU" -addext "subjectAltName=DNS:localhost,IP:127.0.0.1"
+
+# Создание PKCS12 хранилища (для Java)
+openssl pkcs12 -export -out keystore.p12 -inkey ecatalog-key.key -in ecatalog-cert.crt -name "ecatalog" -password pass:12345
+
+# Вывод содержимого
+openssl x509 -in ecatalog-cert.crt -text -noout
+
+ВАЖНО!!! (Для MinIO)
+move ecatalog-cert.crt public.crt
+move ecatalog-key.key private.key
