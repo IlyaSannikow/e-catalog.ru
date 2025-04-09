@@ -1,9 +1,13 @@
 package pro.akosarev.sandbox.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,21 +17,35 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.csrf.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.service.LoginAttemptService;
 
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @Configuration
@@ -71,14 +89,24 @@ public class SecurityConfig {
             HttpSecurity http,
             TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer,
             TokenCookieJweStringSerializer tokenCookieJweStringSerializer,
-            JweCsrfTokenRepository jweCsrfTokenRepository) throws Exception {
+            JweCsrfTokenRepository jweCsrfTokenRepository,
+            LoginAttemptService loginAttemptService,
+            CustomAuthenticationFailureHandler failureHandler) throws Exception {
 
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
 
         http
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+                .formLogin(form -> form
+                        .loginProcessingUrl("/login")
+                        .successHandler((request, response, authentication) -> {
+                            String username = authentication.getName();
+                            loginAttemptService.loginSucceeded(username);
+                            response.sendRedirect("/"); // Перенаправление на главную страницу
+                        })
+                        .failureHandler(failureHandler)
+                        .permitAll())
                 .addFilterAfter(new GetCsrfTokenFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
                 .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), GetCsrfTokenFilter.class)
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository), CsrfFilter.class) // Новый фильтр
@@ -143,18 +171,83 @@ public class SecurityConfig {
         }
     }
 
+    @Component
+    public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+        private final LoginAttemptService loginAttemptService;
+
+        public CustomAuthenticationFailureHandler(LoginAttemptService loginAttemptService) {
+            this.loginAttemptService = loginAttemptService;
+        }
+
+        @Override
+        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
+                                            AuthenticationException exception) throws IOException {
+            String username = request.getParameter("username");
+            loginAttemptService.loginFailed(username);
+
+            if (loginAttemptService.isBlocked(username)) {
+                getRedirectStrategy().sendRedirect(request, response, "/index.html");
+            } else {
+                getRedirectStrategy().sendRedirect(request, response, "/login");
+            }
+        }
+    }
+
+    @Bean
+    public LoginAttemptService loginAttemptService() {
+        return new LoginAttemptService();
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(EntityManager entityManager) {
+    public UserDetailsService userDetailsService(EntityManager entityManager, LoginAttemptService loginAttemptService) {
         return username -> {
-            User user = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.authorities WHERE u.username = :username", User.class)
-                    .setParameter("username", username)
-                    .getSingleResult();
-            return user;
+            if (loginAttemptService.isBlocked(username)) {
+                throw new LockedException("Account temporarily locked due to too many failed attempts");
+            }
+
+            try {
+                User user = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.authorities WHERE u.username = :username", User.class)
+                        .setParameter("username", username)
+                        .getSingleResult();
+                return user;
+            } catch (NoResultException e) {
+                throw new UsernameNotFoundException("User not found");
+            }
         };
     }
+
+    @ControllerAdvice
+    public class SecurityExceptionHandler {
+        @ExceptionHandler(LockedException.class)
+        public ResponseEntity<String> handleLockedException(LockedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
+        }
+    }
+
+    public static class BlockedUserFilter extends OncePerRequestFilter {
+        private final LoginAttemptService loginAttemptService;
+
+        public BlockedUserFilter(LoginAttemptService loginAttemptService) {
+            this.loginAttemptService = loginAttemptService;
+        }
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+                throws ServletException, IOException {
+            if ("/login".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod())) {
+                String username = request.getParameter("username");
+                if (username != null && loginAttemptService.isBlocked(username)) {
+                    response.sendRedirect("/index.html");
+                    return;
+                }
+            }
+            filterChain.doFilter(request, response);
+        }
+    }
+
 }
