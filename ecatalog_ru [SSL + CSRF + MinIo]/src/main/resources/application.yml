@@ -16,9 +16,20 @@ jwt:
   cookie-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
   csrf-token-key: "fbcf5345673e8404"
 
+google:
+  recaptcha:
+    secret: "6Ld0uBErAAAAAK-Pf-Iw7MMun6s9skrX1_mcLSU7"
+    url: "https://www.google.com/recaptcha/api/siteverify"
+    site-key: "6Ld0uBErAAAAAFRfBnNNFWk6ukiGHnxgzTJBigPo"
+
+security:
+  captcha:
+    enabled: true
+    max-attempts: 3       # после скольки неудачных попыток блокировать
+    block-duration-min: 1 # длительность блокировки в минутах
 
 server:
-  port: 8080
+  port: 8443
   http2:
     enabled: true
   ssl:

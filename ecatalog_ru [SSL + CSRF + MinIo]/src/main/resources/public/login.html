@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Авторизоваться в систему</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        .error { color: red; }
+    </style>
+</head>
+<body>
+<h1>Авторизация</h1>
+
+<div th:if="${param.error}" class="error">
+    <span th:if="${param.error == 'captcha'}">Необходимо выполнить CAPTCHA</span>
+    <span th:if="${param.error != 'captcha' and param.error != 'blocked'}">Неверные данные</span>
+</div>
+
+<div th:if="${param.blocked}" class="error">
+    Слишком много попыток входа. Попробуйте войти позже.
+</div>
+
+<form id="login-form">
+    <div>
+        <label for="username">Введите логин:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Введите пароль:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div class="g-recaptcha" data-sitekey="6Ld0uBErAAAAAFRfBnNNFWk6ukiGHnxgzTJBigPo"></div>
+    <button type="submit">Войти в систему</button>
+</form>
+
+<script>
+    document.getElementById('login-form').onsubmit = async function(e) {
+        e.preventDefault();
+
+        // 1. Получаем CSRF токен
+        let csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+
+        console.log('CSRF Token from cookie:', csrfToken); // Логируем токен
+
+        // 2. Получаем reCAPTCHA ответ
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            alert('Пожалуйста, подтвердите, что вы не робот');
+            return;
+        }
+
+        // 3. Формируем данные как form-data
+        const formData = new FormData();
+        formData.append('username', this.username.value);
+        formData.append('password', this.password.value);
+        formData.append('g-recaptcha-response', recaptchaResponse);
+
+        try {
+            // 4. Отправляем запрос
+            const response = await fetch("/login", {
+                method: "POST",
+                headers: {
+                    "X-XSRF-TOKEN": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest"
+                },
+                body: formData,
+                credentials: "include"
+            });
+
+            console.log('Response status:', response.status); // Логируем статус ответа
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('Error response:', errorText);
+                throw new Error(errorText);
+            }
+
+            window.location.href = response.url;
+        } catch (error) {
+            console.error('Error:', error);
+            alert("Ошибка авторизации: " + error.message);
+            grecaptcha.reset();
+        }
+    };
+</script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 package pro.akosarev.sandbox.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,6 +71,16 @@ public class RedirectController {
         model.addAttribute("shareableLink", shareableLink);
 
         return "profile"; // Возвращаем страницу профиля
+    }
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @GetMapping("/logout")
+    public String showLogoutPage(Model model, HttpServletRequest request) {
+        return "logout";
     }
 
 }

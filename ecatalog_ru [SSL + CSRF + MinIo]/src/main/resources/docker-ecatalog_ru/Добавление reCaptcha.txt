@@ -1,0 +1,8 @@
+Перейдите на страницу регистрации: https://www.google.com/recaptcha/admin/create
+
+Label: E-Catalog Auth
+reCAPTCHA type: reCAPTCHA v2
+Domains: localhost
+
+Получаем ключ сайта: 6Ld0uBErAAAAAFRfBnNNFWk6ukiGHnxgzTJBigPo
+Получаем секретный ключ: 6Ld0uBErAAAAAK-Pf-Iw7MMun6s9skrX1_mcLSU7

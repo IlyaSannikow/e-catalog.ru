@@ -1,6 +1,5 @@
 package pro.akosarev.sandbox.configuration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
@@ -12,8 +11,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +30,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,11 +41,10 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
 import pro.akosarev.sandbox.service.LoginAttemptService;
+import pro.akosarev.sandbox.service.RecaptchaService;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Supplier;
 
 @Configuration
@@ -91,7 +90,8 @@ public class SecurityConfig {
             TokenCookieJweStringSerializer tokenCookieJweStringSerializer,
             JweCsrfTokenRepository jweCsrfTokenRepository,
             LoginAttemptService loginAttemptService,
-            CustomAuthenticationFailureHandler failureHandler) throws Exception {
+            CustomAuthenticationFailureHandler failureHandler,
+            RecaptchaService recaptchaService) throws Exception {
 
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
@@ -99,14 +99,12 @@ public class SecurityConfig {
         http
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
+                        .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .successHandler((request, response, authentication) -> {
-                            String username = authentication.getName();
-                            loginAttemptService.loginSucceeded(username);
-                            response.sendRedirect("/"); // Перенаправление на главную страницу
-                        })
-                        .failureHandler(failureHandler)
+                        .defaultSuccessUrl("/")
+                        .failureHandler(new RecaptchaAuthenticationFailureHandler("/login?error", recaptchaService, loginAttemptService))
                         .permitAll())
+                .addFilterBefore(new RecaptchaFilter(recaptchaService, loginAttemptService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new GetCsrfTokenFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
                 .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), GetCsrfTokenFilter.class)
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository), CsrfFilter.class) // Новый фильтр
@@ -122,12 +120,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(jweCsrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler(jweCsrfTokenRepository))
-                        .ignoringRequestMatchers("/public/**", "/register", "/login", "/logout"))
+                        .ignoringRequestMatchers("/public/**", "/register", "/login"))
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
+                        .logoutUrl("/logout") // только POST
                         .logoutSuccessUrl("/index.html")
                         .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID", "XSRF-TOKEN"));
+                        .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                        .permitAll()
+                );
 
         http.apply(tokenCookieAuthenticationConfigurer);
 
@@ -193,6 +193,34 @@ public class SecurityConfig {
         }
     }
 
+    public class RecaptchaAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+        private final RecaptchaService recaptchaService;
+        private final LoginAttemptService loginAttemptService;
+
+        public RecaptchaAuthenticationFailureHandler(String defaultFailureUrl,
+                                                     RecaptchaService recaptchaService,
+                                                     LoginAttemptService loginAttemptService) {
+            super(defaultFailureUrl);
+            this.recaptchaService = recaptchaService;
+            this.loginAttemptService = loginAttemptService;
+        }
+
+        @Override
+        public void onAuthenticationFailure(HttpServletRequest request,
+                                            HttpServletResponse response,
+                                            AuthenticationException exception) throws IOException, ServletException {
+            String username = request.getParameter("username");
+            loginAttemptService.loginFailed(username);
+
+            if (loginAttemptService.isBlocked(username)) {
+                getRedirectStrategy().sendRedirect(request, response, "/login?blocked");
+                return;
+            }
+
+            super.onAuthenticationFailure(request, response, exception);
+        }
+    }
+
     @Bean
     public LoginAttemptService loginAttemptService() {
         return new LoginAttemptService();
@@ -250,4 +278,34 @@ public class SecurityConfig {
         }
     }
 
+    public class RecaptchaFilter extends OncePerRequestFilter {
+        private final RecaptchaService recaptchaService;
+        private final LoginAttemptService loginAttemptService;
+
+        public RecaptchaFilter(RecaptchaService recaptchaService, LoginAttemptService loginAttemptService) {
+            this.recaptchaService = recaptchaService;
+            this.loginAttemptService = loginAttemptService;
+        }
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request,
+                                        HttpServletResponse response,
+                                        FilterChain filterChain) throws ServletException, IOException {
+            if ("/login".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod())) {
+                String username = request.getParameter("username");
+
+                if (username != null && loginAttemptService.isBlocked(username)) {
+                    response.sendRedirect("/login?blocked");
+                    return;
+                }
+
+                String recaptchaResponse = request.getParameter("g-recaptcha-response");
+                if (!recaptchaService.validateRecaptcha(recaptchaResponse)) {
+                    response.sendRedirect("/login?error=captcha");
+                    return;
+                }
+            }
+            filterChain.doFilter(request, response);
+        }
+    }
 }
