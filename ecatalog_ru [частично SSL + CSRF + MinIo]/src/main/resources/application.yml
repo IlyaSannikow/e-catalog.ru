@@ -48,7 +48,11 @@ minio:
     secret: adminpass
   bucket:
     name: ecatalog-bucket
-  truststore:
-    path: classpath:keystore.p12
-    password: 12345
 
+redis:
+  url: rediss://localhost:6379
+  password: securepass
+  truststore:
+    path: C:\Users\1234\IdeaProjects\ecatalog_ru\src\main\resources\docker-ecatalog_ru\certs\keystore.p12
+    password: 12345
+    type: PKCS12

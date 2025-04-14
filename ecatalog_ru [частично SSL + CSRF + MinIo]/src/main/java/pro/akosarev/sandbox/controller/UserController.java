@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pro.akosarev.sandbox.entity.User;
 import pro.akosarev.sandbox.service.PasswordChangeRequest;
 import pro.akosarev.sandbox.service.UserService;

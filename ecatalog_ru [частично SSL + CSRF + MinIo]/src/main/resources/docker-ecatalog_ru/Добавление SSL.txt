@@ -6,6 +6,5 @@ openssl pkcs12 -export -out keystore.p12 -inkey ecatalog-key.key -in ecatalog-ce
 # Вывод содержимого
 openssl x509 -in ecatalog-cert.crt -text -noout
 
-ВАЖНО!!! (Для MinIO)
 move ecatalog-cert.crt public.crt
 move ecatalog-key.key private.key

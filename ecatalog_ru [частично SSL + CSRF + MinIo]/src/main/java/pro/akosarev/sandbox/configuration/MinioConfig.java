@@ -27,12 +27,6 @@ public class MinioConfig {
     @Value("${minio.access.secret}")
     private String accessSecret;
 
-    @Value("${minio.truststore.path}")
-    private String truststorePath;
-
-    @Value("${minio.truststore.password}")
-    private String truststorePassword;
-
     @Bean
     public MinioClient minioClient() throws Exception {
         logger.info("Initializing MinioClient with URL: {}", url);
@@ -40,8 +34,6 @@ public class MinioConfig {
         // 1. Проверяем, использует ли URL HTTPS
         if (!url.startsWith("https://")) {
             logger.warn("Minio URL uses HTTP instead of HTTPS! This is insecure. URL: {}", url);
-            // В продакшене здесь нужно выбросить исключение
-            // throw new IllegalStateException("Minio must use HTTPS");
         }
 
         // 2. Настраиваем TrustManager с логированием

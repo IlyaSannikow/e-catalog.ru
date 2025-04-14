@@ -1,0 +1,7 @@
+# Подключение к серверу
+docker exec -it redis_container redis-cli --tls --cacert /usr/local/etc/redis/certs/public.crt
+
+# Аутентификация
+AUTH securepass
+
+docker exec -it redis_container redis-cli --tls --cacert /usr/local/etc/redis/certs/public.crt --user default --pass securepass

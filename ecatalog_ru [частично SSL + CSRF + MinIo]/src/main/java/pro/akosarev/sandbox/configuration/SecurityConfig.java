@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -112,7 +113,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**", "/error",
                                 "/registration", "/register", "/login", "/user-info",
-                                "/changePassword", "/upload", "index.html", "/registration.html").permitAll()
+                                "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -120,7 +121,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(jweCsrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler(jweCsrfTokenRepository))
-                        .ignoringRequestMatchers("/public/**", "/register", "/login"))
+                        .ignoringRequestMatchers("/public/**", "/register"))
                 .logout(logout -> logout
                         .logoutUrl("/logout") // только POST
                         .logoutSuccessUrl("/index.html")
