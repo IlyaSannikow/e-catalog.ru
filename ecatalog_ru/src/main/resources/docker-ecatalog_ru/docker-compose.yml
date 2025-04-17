@@ -45,6 +45,15 @@ services:
       --tls-cluster yes
       --tls-protocols "TLSv1.2 TLSv1.3"
       --requirepass ${REDIS_PASSWORD:-securepass}
+      --maxclients 10000
+      --timeout 30
+      --tcp-keepalive 300
+      --client-output-buffer-limit normal 0 0 0
+      --client-output-buffer-limit replica 256mb 64mb 60
+      --client-output-buffer-limit pubsub 32mb 8mb 60
+      --latency-monitor-threshold 100
+      --slowlog-log-slower-than 10000
+      --slowlog-max-len 128
     healthcheck:
       test: [ "CMD", "redis-cli", "--tls", "--cacert", "/usr/local/etc/redis/certs/public.crt", "-a", "${REDIS_PASSWORD:-securepass}", "ping" ]
       interval: 30s
