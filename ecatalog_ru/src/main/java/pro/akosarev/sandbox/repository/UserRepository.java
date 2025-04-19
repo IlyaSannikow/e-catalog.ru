@@ -5,4 +5,6 @@ import pro.akosarev.sandbox.entity.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+
+    boolean existsByUsername(String username);
 }

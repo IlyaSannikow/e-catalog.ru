@@ -1,23 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="js/registration.js" defer></script>
     <title>Регистрация</title>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        .error { color: red; }
+    </style>
 </head>
 <body>
+<h1>Регистрация</h1>
+
+<div th:if="${param.error}" class="error">
+    <span th:if="${param.error == 'captcha'}">Необходимо выполнить CAPTCHA</span>
+    <span th:if="${param.error == 'exists'}">Пользователь с таким именем уже существует</span>
+    <span th:if="${param.error == 'password'}">Пароль должен содержать минимум 8 символов</span>
+</div>
+
 <form id="registrationForm">
-    <label>
-        Имя пользователя:<br>
-        <input type="text" name="username" placeholder="Username" required><br>
-    </label>
-    <label>
-        Пароль:<br>
-        <input type="password" name="password" placeholder="Password" required><br>
-    </label>
+    <div>
+        <label for="username">Имя пользователя:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div class="g-recaptcha" data-sitekey="6Ld0uBErAAAAAFRfBnNNFWk6ukiGHnxgzTJBigPo"></div>
     <button type="submit">Зарегистрироваться</button>
 </form>
+
+<script>
+    document.getElementById('registrationForm').onsubmit = async function(e) {
+        e.preventDefault();
+
+        const csrfToken = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('XSRF-TOKEN='))
+            ?.split('=')[1];
+
+        const recaptchaResponse = grecaptcha.getResponse();
+        if (!recaptchaResponse) {
+            alert('Пожалуйста, подтвердите, что вы не робот');
+            return;
+        }
+
+        try {
+            const response = await fetch("/register", {
+                method: "POST",
+                headers: {
+                    "X-XSRF-TOKEN": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams({
+                    username: this.username.value,
+                    password: this.password.value,
+                    'g-recaptcha-response': recaptchaResponse
+                }),
+                credentials: "include"
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.message);
+            }
+
+            window.location.href = "/login?registered=true";
+        } catch (error) {
+            alert(error.message);
+            grecaptcha.reset();
+        }
+    };
+</script>
 </body>
 </html>

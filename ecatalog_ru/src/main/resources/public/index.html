@@ -1,29 +1,25 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Главная страница</title>
-    <script type="text/javascript" src="/js/auth.js"></script>
+    <script src="js/auth.js" defer></script>
 </head>
 <body>
-<div id="logout-div" style="display: none;">
-    <button id="logout-button">Выйти</button>
-</div>
 
-<div id="admin-div" style="display: none;">
-    <a id="admin-link" href="admin">Страница админа</a><br>
-</div>
+<div sec:authorize="isAuthenticated()">
+    <button id="logout-button" onclick="logout()">Выйти</button>
 
-<div id="login-div" style="display: none;">
-    <a id="login-link" href="login">Авторизоваться</a><br>
-</div>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a id="admin-link" href="admin">Страница админа</a><br>
+    </div>
 
-<div id="registration-div" style="display: none;">
-    <a id="registration-link" href="registration">Регистрация</a>
-</div>
-
-<div id="profile-div" style="display: none;">
     <a id="profile-link" href="profile">Профиль</a>
+</div>
+
+<div sec:authorize="!isAuthenticated()">
+    <a id="login-link" href="login">Авторизоваться</a><br>
+    <a id="registration-link" href="registration">Регистрация</a>
 </div>
 
 </body>

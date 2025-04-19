@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pro.akosarev.sandbox.entity.User;
 import pro.akosarev.sandbox.service.PasswordChangeRequest;
+import pro.akosarev.sandbox.service.RecaptchaService;
 import pro.akosarev.sandbox.service.UserService;
 
 import java.security.Principal;
@@ -29,36 +30,24 @@ public class UserController {
 
     private MinioClient minioClient;
 
+    private RecaptchaService recaptchaService;
+
     @Value("${minio.bucket.name}")
     private String bucketName;
 
-    public UserController(UserService userService, MinioClient minioClient) {
+    public UserController(UserService userService, MinioClient minioClient, RecaptchaService recaptchaService) {
         this.userService = userService;
         this.minioClient = minioClient;
+        this.recaptchaService = recaptchaService;
     }
 
-    @GetMapping("/user-info")
-    @ResponseBody
-    public Map<String, Object> getUserInfo() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        boolean isAuthenticated = false;
-        Set<String> roles = new HashSet<>();
-        boolean haveProfileImage = false; // новое поле для хранения состояния изображения профиля
-
-        if (authentication != null && authentication.isAuthenticated() &&
-                !authentication.getAuthorities().stream()
-                        .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ANONYMOUS"))) {
-            isAuthenticated = true;
-
-            authentication.getAuthorities().forEach(authority -> roles.add(authority.getAuthority()));
-        }
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("isAuthenticated", isAuthenticated);
-        response.put("roles", roles);
-
-        return response;
+    @GetMapping("/")
+    public String home(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("isAuthenticated", auth != null && auth.isAuthenticated());
+        model.addAttribute("isAdmin", auth != null && auth.getAuthorities().stream()
+                .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN")));
+        return "index";
     }
 
     @PostMapping("/changePassword")
@@ -93,8 +82,28 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody User user) {
-        // Регистрация нового пользователя
-        userService.registerUser(user);
+    public ResponseEntity<?> register(
+            @RequestParam String username,
+            @RequestParam String password,
+            @RequestParam("g-recaptcha-response") String recaptchaResponse,
+            @RequestHeader(name = "X-XSRF-TOKEN") String csrfToken
+    ) {
+        if (!recaptchaService.validateRecaptcha(recaptchaResponse)) {
+            throw new SecurityException("Неверная CAPTCHA");
+        }
+
+        try {
+            userService.registerUser(username, password, recaptchaResponse);
+            return ResponseEntity.ok().build();
+        } catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("message", e.getMessage()));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest()
+                    .body(Map.of("message", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(Map.of("message", "Ошибка сервера"));
+        }
     }
 }

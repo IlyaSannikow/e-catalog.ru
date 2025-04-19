@@ -39,7 +39,12 @@ server:
 
 logging:
   level:
-    org.springframework.security: debug
+      org:
+        springframework:
+          security: debug
+        thymeleaf:
+          extras:
+            springsecurity6: debug
 
 minio:
   url: https://localhost:9000

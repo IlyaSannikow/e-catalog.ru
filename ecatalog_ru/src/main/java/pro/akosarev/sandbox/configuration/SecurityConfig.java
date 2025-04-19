@@ -118,8 +118,8 @@ public class SecurityConfig {
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository), CsrfFilter.class) // Новый фильтр
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
-                        .requestMatchers("/public/**", "/js/**", "/resources/**", "/error",
-                                "/registration", "/register", "/login", "/user-info",
+                        .requestMatchers("/public/**", "/js/**", "/resources/**",
+                                "/error", "/register", "/login", "/registration", "/",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
@@ -128,10 +128,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(jweCsrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler(jweCsrfTokenRepository))
-                        .ignoringRequestMatchers("/public/**", "/register"))
+                        .ignoringRequestMatchers("/public/**"))
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // только POST
-                        .logoutSuccessUrl("/index.html")
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                         .permitAll()

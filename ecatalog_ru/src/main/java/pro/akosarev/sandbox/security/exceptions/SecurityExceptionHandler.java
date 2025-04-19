@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.exceptions;
+package pro.akosarev.sandbox.security.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
