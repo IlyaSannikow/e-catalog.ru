@@ -8,7 +8,7 @@ public class LoginAttemptService {
     private final Map<String, Integer> attemptsCache = new ConcurrentHashMap<>();
     private final Map<String, Long> blockedUsers = new ConcurrentHashMap<>();
     private static final int MAX_ATTEMPTS = 3;
-    private static final long BLOCK_DURATION = 60 * 1000; // 1 minute in milliseconds
+    private static final long BLOCK_DURATION = 60 * 1000;
 
     public void loginFailed(String key) {
         if (key == null) return;

@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.auth;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.jdbc.core.JdbcTemplate;

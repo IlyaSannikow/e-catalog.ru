@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.cookie;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.session.SessionAuthenticationException;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
 import pro.akosarev.sandbox.entity.Token;
+import pro.akosarev.sandbox.security.cookie.DefaultTokenCookieFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

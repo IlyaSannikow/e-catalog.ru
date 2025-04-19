@@ -14,7 +14,6 @@ import org.apache.commons.codec.binary.Hex;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,14 +32,22 @@ import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.*;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.security.auth.CustomAuthenticationFailureHandler;
+import pro.akosarev.sandbox.security.auth.TokenCookieAuthenticationConfigurer;
+import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringDeserializer;
+import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringSerializer;
+import pro.akosarev.sandbox.security.cookie.TokenCookieSessionAuthenticationStrategy;
+import pro.akosarev.sandbox.security.csrf.CsrfTokenDecryptionFilter;
+import pro.akosarev.sandbox.security.csrf.CsrfTokenInitializerFilter;
+import pro.akosarev.sandbox.security.csrf.GetCsrfTokenFilter;
+import pro.akosarev.sandbox.security.csrf.JweCsrfTokenRepository;
+import pro.akosarev.sandbox.security.recaptcha.RecaptchaAuthenticationFailureHandler;
+import pro.akosarev.sandbox.security.recaptcha.RecaptchaFilter;
 import pro.akosarev.sandbox.service.LoginAttemptService;
 import pro.akosarev.sandbox.service.RecaptchaService;
 
@@ -80,7 +87,7 @@ public class SecurityConfig {
         byte[] truncatedKey = Arrays.copyOf(keyBytes, 16); // 16 байт для A128GCM
         return new JweCsrfTokenRepository(truncatedKey)
                 .withTokenValiditySeconds(600) // 10 минут
-                .secure(true) // только HTTPS
+                .secure(true)
                 .withHttpOnly(true);
     }
 
@@ -172,56 +179,6 @@ public class SecurityConfig {
         }
     }
 
-    @Component
-    public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-        private final LoginAttemptService loginAttemptService;
-
-        public CustomAuthenticationFailureHandler(LoginAttemptService loginAttemptService) {
-            this.loginAttemptService = loginAttemptService;
-        }
-
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
-                                            AuthenticationException exception) throws IOException {
-            String username = request.getParameter("username");
-            loginAttemptService.loginFailed(username);
-
-            if (loginAttemptService.isBlocked(username)) {
-                getRedirectStrategy().sendRedirect(request, response, "/index.html");
-            } else {
-                getRedirectStrategy().sendRedirect(request, response, "/login");
-            }
-        }
-    }
-
-    public class RecaptchaAuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-        private final RecaptchaService recaptchaService;
-        private final LoginAttemptService loginAttemptService;
-
-        public RecaptchaAuthenticationFailureHandler(String defaultFailureUrl,
-                                                     RecaptchaService recaptchaService,
-                                                     LoginAttemptService loginAttemptService) {
-            super(defaultFailureUrl);
-            this.recaptchaService = recaptchaService;
-            this.loginAttemptService = loginAttemptService;
-        }
-
-        @Override
-        public void onAuthenticationFailure(HttpServletRequest request,
-                                            HttpServletResponse response,
-                                            AuthenticationException exception) throws IOException, ServletException {
-            String username = request.getParameter("username");
-            loginAttemptService.loginFailed(username);
-
-            if (loginAttemptService.isBlocked(username)) {
-                getRedirectStrategy().sendRedirect(request, response, "/login?blocked");
-                return;
-            }
-
-            super.onAuthenticationFailure(request, response, exception);
-        }
-    }
-
     @Bean
     public LoginAttemptService loginAttemptService() {
         return new LoginAttemptService();
@@ -248,65 +205,5 @@ public class SecurityConfig {
                 throw new UsernameNotFoundException("User not found");
             }
         };
-    }
-
-    @ControllerAdvice
-    public class SecurityExceptionHandler {
-        @ExceptionHandler(LockedException.class)
-        public ResponseEntity<String> handleLockedException(LockedException ex) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-        }
-    }
-
-    public static class BlockedUserFilter extends OncePerRequestFilter {
-        private final LoginAttemptService loginAttemptService;
-
-        public BlockedUserFilter(LoginAttemptService loginAttemptService) {
-            this.loginAttemptService = loginAttemptService;
-        }
-
-        @Override
-        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-                throws ServletException, IOException {
-            if ("/login".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod())) {
-                String username = request.getParameter("username");
-                if (username != null && loginAttemptService.isBlocked(username)) {
-                    response.sendRedirect("/index.html");
-                    return;
-                }
-            }
-            filterChain.doFilter(request, response);
-        }
-    }
-
-    public class RecaptchaFilter extends OncePerRequestFilter {
-        private final RecaptchaService recaptchaService;
-        private final LoginAttemptService loginAttemptService;
-
-        public RecaptchaFilter(RecaptchaService recaptchaService, LoginAttemptService loginAttemptService) {
-            this.recaptchaService = recaptchaService;
-            this.loginAttemptService = loginAttemptService;
-        }
-
-        @Override
-        protected void doFilterInternal(HttpServletRequest request,
-                                        HttpServletResponse response,
-                                        FilterChain filterChain) throws ServletException, IOException {
-            if ("/login".equals(request.getRequestURI()) && "POST".equalsIgnoreCase(request.getMethod())) {
-                String username = request.getParameter("username");
-
-                if (username != null && loginAttemptService.isBlocked(username)) {
-                    response.sendRedirect("/login?blocked");
-                    return;
-                }
-
-                String recaptchaResponse = request.getParameter("g-recaptcha-response");
-                if (!recaptchaService.validateRecaptcha(recaptchaResponse)) {
-                    response.sendRedirect("/login?error=captcha");
-                    return;
-                }
-            }
-            filterChain.doFilter(request, response);
-        }
     }
 }

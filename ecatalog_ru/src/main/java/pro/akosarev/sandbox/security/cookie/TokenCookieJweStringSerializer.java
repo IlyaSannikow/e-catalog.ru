@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.cookie;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jwt.EncryptedJWT;

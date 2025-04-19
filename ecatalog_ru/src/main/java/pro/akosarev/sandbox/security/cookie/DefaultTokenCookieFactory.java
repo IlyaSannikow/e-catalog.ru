@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.cookie;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

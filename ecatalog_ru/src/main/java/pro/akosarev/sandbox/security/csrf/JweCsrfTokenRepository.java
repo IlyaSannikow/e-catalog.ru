@@ -1,16 +1,11 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.csrf;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.*;
 import com.nimbusds.jose.jwk.*;
-import com.nimbusds.jose.jwk.gen.*;
-import com.nimbusds.jwt.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.codec.binary.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.web.csrf.*;
 import org.springframework.web.util.*;
 

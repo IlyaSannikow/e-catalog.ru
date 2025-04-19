@@ -1,4 +1,4 @@
-package pro.akosarev.sandbox.configuration;
+package pro.akosarev.sandbox.security.csrf;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
