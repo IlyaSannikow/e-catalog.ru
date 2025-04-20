@@ -3,6 +3,7 @@ package pro.akosarev.sandbox.configuration;
 import com.nimbusds.jose.crypto.DirectDecrypter;
 import com.nimbusds.jose.crypto.DirectEncrypter;
 import com.nimbusds.jose.jwk.OctetSequenceKey;
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.servlet.FilterChain;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Hex;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +37,11 @@ import org.springframework.security.web.csrf.*;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.repository.UsedCsrfTokenRepository;
 import pro.akosarev.sandbox.security.auth.CustomAuthenticationFailureHandler;
 import pro.akosarev.sandbox.security.auth.TokenCookieAuthenticationConfigurer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringDeserializer;
@@ -53,10 +58,25 @@ import pro.akosarev.sandbox.service.RecaptchaService;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.function.Supplier;
 
 @Configuration
 public class SecurityConfig {
+
+    private SecurityProperties securityProperties;
+
+    private List<String> allowedOrigins;
+
+    @PostConstruct
+    public void init() {
+        this.allowedOrigins = securityProperties.getAllowedOrigins();
+    }
+
+    public SecurityConfig(SecurityProperties securityProperties) {
+        this.securityProperties = securityProperties;
+    }
+
     @Bean
     public TokenCookieJweStringSerializer tokenCookieJweStringSerializer(
             @Value("${jwt.cookie-token-key}") String cookieTokenKey
@@ -82,11 +102,12 @@ public class SecurityConfig {
 
     @Bean
     public JweCsrfTokenRepository jweCsrfTokenRepository(
-            @Value("${jwt.csrf-token-key}") String csrfTokenKey) throws Exception {
+            @Value("${jwt.csrf-token-key}") String csrfTokenKey,
+            UsedCsrfTokenRepository usedCsrfTokenRepository) throws Exception {
         byte[] keyBytes = Hex.decodeHex(csrfTokenKey);
-        byte[] truncatedKey = Arrays.copyOf(keyBytes, 16); // 16 байт для A128GCM
-        return new JweCsrfTokenRepository(truncatedKey)
-                .withTokenValiditySeconds(600) // 10 минут
+        byte[] truncatedKey = Arrays.copyOf(keyBytes, 16);
+        return new JweCsrfTokenRepository(truncatedKey, usedCsrfTokenRepository)
+                .withTokenValiditySeconds(600)
                 .secure(true)
                 .withHttpOnly(true);
     }
@@ -115,11 +136,11 @@ public class SecurityConfig {
                 .addFilterBefore(new RecaptchaFilter(recaptchaService, loginAttemptService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new GetCsrfTokenFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
                 .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), GetCsrfTokenFilter.class)
-                .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository), CsrfFilter.class) // Новый фильтр
+                .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository, allowedOrigins), CsrfFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
-                                "/error", "/register", "/login", "/registration", "/",
+                                "/error", "/register", "/login", "/registration", "/", "/api/test/csrf-check",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
@@ -152,12 +173,6 @@ public class SecurityConfig {
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response,
                            Supplier<CsrfToken> csrfToken) {
-            if ("GET".equalsIgnoreCase(request.getMethod())) {
-                CsrfToken token = csrfToken.get();
-                if (token != null) {
-                    tokenRepository.saveToken(token, request, response);
-                }
-            }
         }
 
         @Override

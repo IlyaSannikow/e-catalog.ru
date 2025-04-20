@@ -36,7 +36,7 @@ public class GetCsrfTokenFilter extends OncePerRequestFilter {
             // Генерируем новый токен
             CsrfToken token = csrfTokenRepository.generateToken(request);
 
-            // Сохраняем зашифрованный токен в куки
+            System.out.println("TYT1");
             csrfTokenRepository.saveToken(token, request, response);
 
             // Получаем зашифрованное значение токена из куки

@@ -27,6 +27,7 @@
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_authority" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_deactivated_token" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_info" active-filter-id="EMPTY_FILTER" />
+    <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.used_csrf_tokens" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user" active-filter-id="EMPTY_FILTER" />
   </component>
   <component name="DBNavigator.Project.ExecutionManager">
