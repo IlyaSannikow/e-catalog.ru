@@ -15,6 +15,7 @@ spring:
 jwt:
   cookie-token-key: '{"kty":"oct","k":"956PBFst1FguLr5irJD-aQ"}'
   csrf-token-key: "fbcf5345673e8404"
+  secret-key: "d2d7a5b1c4e6f8a9b3c5d7e9f1a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6"
 
 google:
   recaptcha:

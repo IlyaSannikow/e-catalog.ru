@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
+    private static final Logger logger = LoggerFactory.getLogger(CsrfTokenDecryptionFilter.class);
 
     private final JweCsrfTokenRepository csrfTokenRepository;
     private final List<String> allowedOrigins;
@@ -29,25 +30,45 @@ public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
 
-        if (requiresCsrfCheck(request)) {
+        if (!requiresCsrfCheck(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            String encryptedToken = request.getHeader(csrfTokenRepository.getHeaderName());
-
-            if (encryptedToken == null) {
-                Cookie cookie = WebUtils.getCookie(request, csrfTokenRepository.getCookieName());
-                if (cookie != null) {
-                    encryptedToken = cookie.getValue();
-                }
-            }
-
-            if (encryptedToken != null) {
-                String decryptedToken = csrfTokenRepository.decryptToken(encryptedToken);
-
-                if (decryptedToken != null) {
-                    request.setAttribute(csrfTokenRepository.getParameterName(), decryptedToken);
-                }
+        // Получаем токен из заголовка или куки
+        String encryptedToken = request.getHeader(csrfTokenRepository.getHeaderName());
+        if (encryptedToken == null) {
+            Cookie cookie = WebUtils.getCookie(request, csrfTokenRepository.getCookieName());
+            if (cookie != null) {
+                encryptedToken = cookie.getValue();
             }
         }
+
+        // Блокируем запросы без токена
+        if (encryptedToken == null) {
+            logger.warn("Blocked CSRF attack - missing token for {}", request.getRequestURI());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Missing CSRF token");
+            return;
+        }
+
+        // Дешифруем и проверяем токен
+        String decryptedToken = csrfTokenRepository.decryptToken(encryptedToken);
+        if (decryptedToken == null) {
+            logger.warn("Blocked CSRF attack - invalid token format");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF token");
+            return;
+        }
+
+        // Проверяем, не использовался ли токен ранее
+        if (csrfTokenRepository.getUsedCsrfTokenRepository().existsByEncryptedToken(encryptedToken)) {
+            logger.warn("Blocked CSRF attack - reused token");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "CSRF token already used");
+            return;
+        }
+
+        logger.info("Valid CSRF token received. Encrypted: {}, Decrypted: {}",
+                encryptedToken, decryptedToken);
+        request.setAttribute(csrfTokenRepository.getParameterName(), decryptedToken);
 
         filterChain.doFilter(request, response);
     }
@@ -56,58 +77,5 @@ public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
         String method = request.getMethod();
         return "POST".equals(method) || "PUT".equals(method)
                 || "PATCH".equals(method) || "DELETE".equals(method);
-    }
-
-    private boolean isValidOrigin(HttpServletRequest request) {
-        String origin = request.getHeader("Origin");
-        String referer = request.getHeader("Referer");
-
-        // Разрешенные запросы без Origin/Referer (например, для мобильных приложений)
-        if (origin == null && referer == null) {
-            return true;
-        }
-
-        // Проверка Origin
-        if (origin != null) {
-            try {
-                // Нормализуем origin (удаляем trailing slash если есть)
-                origin = origin.endsWith("/") ? origin.substring(0, origin.length() - 1) : origin;
-                return allowedOrigins.contains(origin);
-            } catch (Exception e) {
-                logger.warn("Invalid Origin header format: " + origin, e);
-                return false;
-            }
-        }
-
-        // Проверка Referer
-        if (referer != null) {
-            try {
-                // Удаляем path и query из Referer для проверки только домена
-                URI refererUri = new URI(referer);
-                String refererHost = refererUri.getHost();
-                if (refererHost == null) {
-                    return false;
-                }
-
-                // Проверяем каждый allowed origin
-                for (String allowedOrigin : allowedOrigins) {
-                    try {
-                        URI allowedUri = new URI(allowedOrigin);
-                        if (refererHost.equalsIgnoreCase(allowedUri.getHost())) {
-                            return true;
-                        }
-                    } catch (URISyntaxException e) {
-                        logger.warn("Invalid allowed origin format: " + allowedOrigin, e);
-                        continue;
-                    }
-                }
-                return false;
-            } catch (URISyntaxException e) {
-                logger.warn("Invalid Referer header format: " + referer, e);
-                return false;
-            }
-        }
-
-        return false;
     }
 }

@@ -15,6 +15,9 @@ public interface UserLogoutEventRepository extends JpaRepository<UserLogoutEvent
     @Query("SELECT COUNT(e) > 0 FROM UserLogoutEvent e WHERE e.userId = :userId AND e.logoutTime > :createdAt")
     boolean existsLogoutEventAfter(@Param("userId") String userId, @Param("createdAt") Date createdAt);
 
+    @Query("SELECT COUNT(e) > 0 FROM UserLogoutEvent e WHERE e.token = :token")
+    boolean existsByToken(@Param("token") String token);
+
     @Modifying
     @Query("DELETE FROM UserLogoutEvent e WHERE e.logoutTime < :cutoffDate")
     void deleteOldEvents(@Param("cutoffDate") Date cutoffDate);

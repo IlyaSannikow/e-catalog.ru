@@ -14,7 +14,7 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="7e2b3810-7765-4940-83ef-107fc5262a95">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
-      <console name="ecatalog_conn" type="STANDARD" schema="public" session="Main"><![CDATA[UPDATE t_user SET blocked = false WHERE username = 'test';]]></console>
+      <console name="ecatalog_conn" type="STANDARD" schema="public" session="Main" />
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">

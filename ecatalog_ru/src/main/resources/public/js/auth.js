@@ -3,16 +3,22 @@ async function logout() {
     if (!shouldLogout) return;
 
     try {
-        const csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
+        // 1. Сначала получаем CSRF токен через специальный endpoint
+        const tokenResponse = await fetch("/csrf-token", {
+            method: "GET",
+            credentials: "include"
+        });
 
+        if (!tokenResponse.ok) {
+            throw new Error('Не удалось получить CSRF токен');
+        }
+
+        // 2. Отправляем запрос на выход
         const response = await fetch("/logout", {
             method: "POST",
             headers: {
-                "X-XSRF-TOKEN": csrfToken,
                 "X-Requested-With": "XMLHttpRequest"
+                // CSRF токен автоматически подставится из куки
             },
             credentials: "include"
         });

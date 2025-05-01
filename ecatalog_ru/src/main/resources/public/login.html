@@ -33,16 +33,19 @@
 </form>
 
 <script>
+    async function getCsrfToken() {
+        const response = await fetch("/csrf-token", {
+            method: "GET",
+            credentials: "include"
+        });
+        if (!response.ok) {
+            throw new Error('Failed to get CSRF token');
+        }
+    }
     document.getElementById('login-form').onsubmit = async function(e) {
         e.preventDefault();
 
-        // 1. Получаем CSRF токен
-        let csrfToken = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('XSRF-TOKEN='))
-            ?.split('=')[1];
-
-        console.log('CSRF Token from cookie:', csrfToken); // Логируем токен
+        await getCsrfToken();
 
         // 2. Получаем reCAPTCHA ответ
         const recaptchaResponse = grecaptcha.getResponse();
@@ -62,7 +65,6 @@
             const response = await fetch("/login", {
                 method: "POST",
                 headers: {
-                    "X-XSRF-TOKEN": csrfToken,
                     "X-Requested-With": "XMLHttpRequest"
                 },
                 body: formData,

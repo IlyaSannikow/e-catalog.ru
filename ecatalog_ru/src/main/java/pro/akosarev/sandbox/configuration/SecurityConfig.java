@@ -29,6 +29,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -41,6 +43,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.entity.UserLogoutEvent;
 import pro.akosarev.sandbox.repository.UsedCsrfTokenRepository;
 import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 import pro.akosarev.sandbox.security.auth.CustomAuthenticationFailureHandler;
@@ -48,16 +51,17 @@ import pro.akosarev.sandbox.security.auth.TokenCookieAuthenticationConfigurer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringDeserializer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringSerializer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieSessionAuthenticationStrategy;
-import pro.akosarev.sandbox.security.csrf.CsrfTokenDecryptionFilter;
-import pro.akosarev.sandbox.security.csrf.CsrfTokenInitializerFilter;
-import pro.akosarev.sandbox.security.csrf.JweCsrfTokenRepository;
+import pro.akosarev.sandbox.security.csrf.*;
 import pro.akosarev.sandbox.security.recaptcha.RecaptchaAuthenticationFailureHandler;
 import pro.akosarev.sandbox.security.recaptcha.RecaptchaFilter;
 import pro.akosarev.sandbox.service.LoginAttemptService;
 import pro.akosarev.sandbox.service.RecaptchaService;
+import pro.akosarev.sandbox.service.TokenValidationService;
 
+import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -66,7 +70,6 @@ public class SecurityConfig {
 
     private SecurityProperties securityProperties;
     private final UserLogoutEventRepository userLogoutEventRepository;
-
     private List<String> allowedOrigins;
 
     @PostConstruct
@@ -74,15 +77,29 @@ public class SecurityConfig {
         this.allowedOrigins = securityProperties.getAllowedOrigins();
     }
 
-    public SecurityConfig(SecurityProperties securityProperties, UserLogoutEventRepository userLogoutEventRepository) {
+    public SecurityConfig(SecurityProperties securityProperties,
+                          UserLogoutEventRepository userLogoutEventRepository) {
         this.securityProperties = securityProperties;
         this.userLogoutEventRepository = userLogoutEventRepository;
     }
 
+    // Новые бины для работы с токенами
+    @Bean
+    public TokenValidationService tokenValidationService(JdbcTemplate jdbcTemplate) {
+        return new TokenValidationService(jdbcTemplate, allowedOrigins, userLogoutEventRepository);
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(@Value("${jwt.secret-key}") String secretKey) {
+        return NimbusJwtDecoder.withSecretKey(
+                new SecretKeySpec(secretKey.getBytes(), "HS256")
+        ).build();
+    }
+
+    // Остальные бины остаются без изменений
     @Bean
     public TokenCookieJweStringSerializer tokenCookieJweStringSerializer(
-            @Value("${jwt.cookie-token-key}") String cookieTokenKey
-    ) throws Exception {
+            @Value("${jwt.cookie-token-key}") String cookieTokenKey) throws Exception {
         return new TokenCookieJweStringSerializer(new DirectEncrypter(
                 OctetSequenceKey.parse(cookieTokenKey)
         ));
@@ -123,7 +140,9 @@ public class SecurityConfig {
             JweCsrfTokenRepository jweCsrfTokenRepository,
             LoginAttemptService loginAttemptService,
             CustomAuthenticationFailureHandler failureHandler,
-            RecaptchaService recaptchaService) throws Exception {
+            RecaptchaService recaptchaService,
+            TokenValidationService tokenValidationService,
+            JwtDecoder jwtDecoder) throws Exception {
 
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
@@ -138,13 +157,15 @@ public class SecurityConfig {
                         .defaultSuccessUrl("/")
                         .failureHandler(new RecaptchaAuthenticationFailureHandler("/login?error", recaptchaService, loginAttemptService))
                         .permitAll())
+                .addFilterBefore(new CsrfTokenEndpointFilter(jweCsrfTokenRepository), CsrfFilter.class)
                 .addFilterBefore(new RecaptchaFilter(recaptchaService, loginAttemptService), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository, allowedOrigins), CsrfFilter.class)
+                .addFilterBefore(new TokenValidationFilter(tokenValidationService, jwtDecoder), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
-                                "/error", "/register", "/login", "/registration", "/",
+                                "/error", "/register", "/login", "/registration", "/", "/csrf-token",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
@@ -153,16 +174,36 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(jweCsrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler(jweCsrfTokenRepository))
-                        .ignoringRequestMatchers("/public/**"))
+                        .ignoringRequestMatchers("/public/**", "/csrf-token"))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID", "XSRF-TOKEN")
+                        .addLogoutHandler((request, response, authentication) -> {
+                            if (authentication != null) {
+                                String token = extractToken(request);
+                                if (token != null) {
+                                    UserLogoutEvent event = new UserLogoutEvent();
+                                    event.setUserId(authentication.getName());
+                                    event.setToken(token);
+                                    event.setLogoutTime(new Date());
+                                    userLogoutEventRepository.save(event);
+                                }
+                            }
+                        })
                         .permitAll()
                 );
 
         return http.build();
+    }
+
+    private String extractToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 
     private static class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler {
@@ -193,7 +234,9 @@ public class SecurityConfig {
             // Получаем из куки
             Cookie cookie = WebUtils.getCookie(request, tokenRepository.getCookieName());
             if (cookie != null) {
-                return tokenRepository.decryptToken(cookie.getValue());
+                String token = tokenRepository.decryptToken(cookie.getValue());
+                System.out.println("Resolved CSRF token from cookie. Encrypted: " +  cookie.getValue() + " Decrypted: " + token);
+                return token;
             }
 
             return null;

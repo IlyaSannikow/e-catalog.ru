@@ -18,7 +18,16 @@ public class UserLogoutEvent {
     @Temporal(TemporalType.TIMESTAMP)
     private Date logoutTime;
 
-    // Конструкторы, геттеры и сеттеры
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+// Конструкторы, геттеры и сеттеры
 
     public UserLogoutEvent() {
     }

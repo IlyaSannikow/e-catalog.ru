@@ -1,29 +1,37 @@
+// Общая функция для получения CSRF токена
+async function getCsrfToken() {
+    const response = await fetch("/csrf-token", {
+        method: "GET",
+        credentials: "include"
+    });
+    if (!response.ok) {
+        throw new Error('Failed to get CSRF token');
+    }
+}
+
 document.getElementById('change-password-form').onsubmit = async function(e) {
     e.preventDefault();
 
-    // 1. Получаем CSRF токен из куки (правильный способ)
-    const csrfToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
-
-    // 2. Подготавливаем данные
-    const data = {
-        currentPassword: this.currentPassword.value,
-        newPassword: this.newPassword.value
-    };
-
     try {
-        // 3. Отправляем запрос с ВСЕМИ необходимыми заголовками
+        // 1. Получаем CSRF токен
+        await getCsrfToken();
+
+        // 2. Подготавливаем данные
+        const data = {
+            currentPassword: this.currentPassword.value,
+            newPassword: this.newPassword.value
+        };
+
+        // 3. Отправляем запрос
         const response = await fetch("/changePassword", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "X-XSRF-TOKEN": csrfToken, // Важно: без decodeURIComponent!
-                "X-Requested-With": "XMLHttpRequest" // Добавляем для Spring Security
+                "X-Requested-With": "XMLHttpRequest"
+                // CSRF токен автоматически подставится из куки
             },
             body: JSON.stringify(data),
-            credentials: "include" // Обязательно для HTTPS и кук
+            credentials: "include"
         });
 
         if (!response.ok) {
@@ -40,23 +48,20 @@ document.getElementById('change-password-form').onsubmit = async function(e) {
 document.getElementById('profile-image-form').onsubmit = async function(e) {
     e.preventDefault();
 
-    // 1. Получаем CSRF токен из куки
-    const csrfToken = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('XSRF-TOKEN='))
-        ?.split('=')[1];
-
-    // 2. Подготавливаем FormData
-    const formData = new FormData();
-    formData.append('file', this.file.files[0]);
-
     try {
-        // 3. Отправляем запрос с заголовками
+        // 1. Получаем CSRF токен
+        await getCsrfToken();
+
+        // 2. Подготавливаем FormData
+        const formData = new FormData();
+        formData.append('file', this.file.files[0]);
+
+        // 3. Отправляем запрос
         const response = await fetch("/upload", {
             method: "POST",
             headers: {
-                "X-XSRF-TOKEN": csrfToken,
                 "X-Requested-With": "XMLHttpRequest"
+                // CSRF токен автоматически подставится из куки
             },
             body: formData,
             credentials: "include"

@@ -101,15 +101,27 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
         }
 
         String encryptedToken = encryptToken(token.getToken());
-        if (!usedCsrfTokenRepository.existsByEncryptedToken(encryptedToken)) {
-            markTokenAsUsed(encryptedToken);
-            Cookie cookie = new Cookie(cookieName, encryptedToken);
-            cookie.setSecure(secure);
-            cookie.setPath(getCookiePath(request));
-            cookie.setHttpOnly(httpOnly);
-            cookie.setMaxAge(tokenValiditySeconds);
-            response.addCookie(cookie);
+
+        // Не помечаем старый токен как использованный при генерации нового
+        Cookie oldCookie = WebUtils.getCookie(request, cookieName);
+        if (oldCookie != null && !oldCookie.getValue().equals(encryptedToken)) {
+            // Можно добавить задержку перед инвалидацией старого токена
+            new Thread(() -> {
+                try {
+                    Thread.sleep(5000); // Даем 5 секунд на завершение текущих запросов
+                    markTokenAsUsed(oldCookie.getValue());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }).start();
         }
+
+        Cookie cookie = new Cookie(cookieName, encryptedToken);
+        cookie.setSecure(secure);
+        cookie.setPath(getCookiePath(request));
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(tokenValiditySeconds);
+        response.addCookie(cookie);
     }
 
     @Override
@@ -120,6 +132,7 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
         }
 
         String encryptedToken = cookie.getValue();
+        System.out.println("enc: " + encryptedToken);
         String token = decryptToken(encryptedToken);
         return token != null ? new DefaultCsrfToken(headerName, parameterName, token) : null;
     }
@@ -163,8 +176,14 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
         try {
             JWEObject jweObject = JWEObject.parse(encryptedToken);
             jweObject.decrypt(decrypter);
-            return jweObject.getPayload().toString();
+            String decryptedToken = jweObject.getPayload().toString();
+
+            // Логируем расшифрованный токен
+            logger.debug("Decrypted CSRF token. Encrypted: {}, Decrypted: {}", encryptedToken, decryptedToken);
+
+            return decryptedToken;
         } catch (Exception e) {
+            logger.error("Failed to decrypt CSRF token: " + encryptedToken, e);
             return null;
         }
     }
