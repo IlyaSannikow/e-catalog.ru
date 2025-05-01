@@ -24,6 +24,9 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user") // Обратная связь с UserInfo
     private UserInfo userInfo;
 
+    @Column(name = "blocked") // Обратите внимание на имя столбца в БД
+    private boolean blocked = false;
+
     public UserInfo getUserInfo() {
         return userInfo;
     }
@@ -68,6 +71,14 @@ public class User implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public boolean isBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        this.blocked = blocked;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true; // Реализуйте свою логику
@@ -75,7 +86,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true; // Реализуйте свою логику
+        return !blocked; // Реализуйте свою логику
     }
 
     @Override

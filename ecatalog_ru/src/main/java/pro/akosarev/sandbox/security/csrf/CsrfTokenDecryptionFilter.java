@@ -16,7 +16,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
-    private static final Logger logger = LoggerFactory.getLogger(CsrfTokenDecryptionFilter.class);
 
     private final JweCsrfTokenRepository csrfTokenRepository;
     private final List<String> allowedOrigins;
@@ -31,31 +30,22 @@ public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         if (requiresCsrfCheck(request)) {
-            logger.debug("CSRF check required for {}", request.getRequestURI());
 
             String encryptedToken = request.getHeader(csrfTokenRepository.getHeaderName());
-            logger.debug("Token from header: {}", encryptedToken);
 
             if (encryptedToken == null) {
                 Cookie cookie = WebUtils.getCookie(request, csrfTokenRepository.getCookieName());
-                logger.debug("Token from cookie: {}", cookie != null ? "[present]" : "null");
                 if (cookie != null) {
                     encryptedToken = cookie.getValue();
                 }
             }
 
             if (encryptedToken != null) {
-                logger.debug("Attempting to decrypt token...");
                 String decryptedToken = csrfTokenRepository.decryptToken(encryptedToken);
 
                 if (decryptedToken != null) {
-                    logger.debug("Token decrypted successfully");
                     request.setAttribute(csrfTokenRepository.getParameterName(), decryptedToken);
-                } else {
-                    logger.error("Failed to decrypt CSRF token");
                 }
-            } else {
-                logger.warn("No CSRF token found in request");
             }
         }
 

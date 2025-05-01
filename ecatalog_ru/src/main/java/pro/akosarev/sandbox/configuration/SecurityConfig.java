@@ -42,6 +42,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
 import pro.akosarev.sandbox.repository.UsedCsrfTokenRepository;
+import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 import pro.akosarev.sandbox.security.auth.CustomAuthenticationFailureHandler;
 import pro.akosarev.sandbox.security.auth.TokenCookieAuthenticationConfigurer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringDeserializer;
@@ -49,7 +50,6 @@ import pro.akosarev.sandbox.security.cookie.TokenCookieJweStringSerializer;
 import pro.akosarev.sandbox.security.cookie.TokenCookieSessionAuthenticationStrategy;
 import pro.akosarev.sandbox.security.csrf.CsrfTokenDecryptionFilter;
 import pro.akosarev.sandbox.security.csrf.CsrfTokenInitializerFilter;
-import pro.akosarev.sandbox.security.csrf.GetCsrfTokenFilter;
 import pro.akosarev.sandbox.security.csrf.JweCsrfTokenRepository;
 import pro.akosarev.sandbox.security.recaptcha.RecaptchaAuthenticationFailureHandler;
 import pro.akosarev.sandbox.security.recaptcha.RecaptchaFilter;
@@ -65,6 +65,7 @@ import java.util.function.Supplier;
 public class SecurityConfig {
 
     private SecurityProperties securityProperties;
+    private final UserLogoutEventRepository userLogoutEventRepository;
 
     private List<String> allowedOrigins;
 
@@ -73,8 +74,9 @@ public class SecurityConfig {
         this.allowedOrigins = securityProperties.getAllowedOrigins();
     }
 
-    public SecurityConfig(SecurityProperties securityProperties) {
+    public SecurityConfig(SecurityProperties securityProperties, UserLogoutEventRepository userLogoutEventRepository) {
         this.securityProperties = securityProperties;
+        this.userLogoutEventRepository = userLogoutEventRepository;
     }
 
     @Bean
@@ -89,15 +91,16 @@ public class SecurityConfig {
     @Bean
     public TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer(
             @Value("${jwt.cookie-token-key}") String cookieTokenKey,
-            JdbcTemplate jdbcTemplate
-    ) throws Exception {
+            JdbcTemplate jdbcTemplate,
+            UserLogoutEventRepository userLogoutEventRepository) throws Exception {
         return new TokenCookieAuthenticationConfigurer()
                 .tokenCookieStringDeserializer(new TokenCookieJweStringDeserializer(
                         new DirectDecrypter(
                                 OctetSequenceKey.parse(cookieTokenKey)
                         )
                 ))
-                .jdbcTemplate(jdbcTemplate);
+                .jdbcTemplate(jdbcTemplate)
+                .userLogoutEventRepository(userLogoutEventRepository);
     }
 
     @Bean
@@ -125,6 +128,8 @@ public class SecurityConfig {
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
 
+        http.apply(tokenCookieAuthenticationConfigurer);
+
         http
                 .httpBasic(Customizer.withDefaults())
                 .formLogin(form -> form
@@ -134,13 +139,12 @@ public class SecurityConfig {
                         .failureHandler(new RecaptchaAuthenticationFailureHandler("/login?error", recaptchaService, loginAttemptService))
                         .permitAll())
                 .addFilterBefore(new RecaptchaFilter(recaptchaService, loginAttemptService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new GetCsrfTokenFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
-                .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), GetCsrfTokenFilter.class)
+                .addFilterAfter(new CsrfTokenInitializerFilter(jweCsrfTokenRepository), ExceptionTranslationFilter.class)
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository, allowedOrigins), CsrfFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
-                                "/error", "/register", "/login", "/registration", "/", "/api/test/csrf-check",
+                                "/error", "/register", "/login", "/registration", "/",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
@@ -158,8 +162,6 @@ public class SecurityConfig {
                         .permitAll()
                 );
 
-        http.apply(tokenCookieAuthenticationConfigurer);
-
         return http.build();
     }
 
@@ -173,21 +175,25 @@ public class SecurityConfig {
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response,
                            Supplier<CsrfToken> csrfToken) {
+            // Генерируем токен только если его нет
+            if (request.getAttribute(csrfToken.get().getParameterName()) == null) {
+                CsrfToken token = csrfToken.get();
+                request.setAttribute(token.getParameterName(), token.getToken());
+            }
         }
 
         @Override
         public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-            // 1. Проверяем атрибуты запроса (установленные фильтром)
+            // Проверяем атрибуты запроса (установленные фильтром)
             String decryptedToken = (String) request.getAttribute(csrfToken.getParameterName());
             if (decryptedToken != null) {
                 return decryptedToken;
             }
 
-            // 2. Пробуем получить из куки напрямую
+            // Получаем из куки
             Cookie cookie = WebUtils.getCookie(request, tokenRepository.getCookieName());
             if (cookie != null) {
-                String encrypted = cookie.getValue();
-                return tokenRepository.decryptToken(encrypted);
+                return tokenRepository.decryptToken(cookie.getValue());
             }
 
             return null;

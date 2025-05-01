@@ -14,6 +14,8 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import pro.akosarev.sandbox.entity.Token;
 import pro.akosarev.sandbox.entity.TokenAuthenticationUserDetailsService;
 import pro.akosarev.sandbox.entity.TokenUser;
+import pro.akosarev.sandbox.entity.UserLogoutEvent;
+import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -22,6 +24,7 @@ public class TokenCookieAuthenticationConfigurer
         extends AbstractHttpConfigurer<TokenCookieAuthenticationConfigurer, HttpSecurity> {
 
     private Function<String, Token> tokenCookieStringDeserializer;
+    private UserLogoutEventRepository userLogoutEventRepository;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -32,8 +35,14 @@ public class TokenCookieAuthenticationConfigurer
                 .addLogoutHandler((request, response, authentication) -> {
                     if (authentication != null &&
                             authentication.getPrincipal() instanceof TokenUser user) {
-                        this.jdbcTemplate.update("insert into t_deactivated_token (id, c_keep_until) values (?, ?)",
+                        // Инвалидируем текущий токен
+                        this.jdbcTemplate.update(
+                                "insert into t_deactivated_token (id, c_keep_until) values (?, ?)",
                                 user.getToken().id(), Date.from(user.getToken().expiresAt()));
+
+                        // Записываем событие logout
+                        userLogoutEventRepository.save(
+                                new UserLogoutEvent(user.getUsername(), new Date()));
 
                         response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     }
@@ -54,7 +63,7 @@ public class TokenCookieAuthenticationConfigurer
 
         var authenticationProvider = new PreAuthenticatedAuthenticationProvider();
         authenticationProvider.setPreAuthenticatedUserDetailsService(
-                new TokenAuthenticationUserDetailsService(this.jdbcTemplate));
+                new TokenAuthenticationUserDetailsService(this.jdbcTemplate, this.userLogoutEventRepository));
 
         builder.addFilterAfter(cookieAuthenticationFilter, CsrfFilter.class)
                 .authenticationProvider(authenticationProvider);
@@ -66,9 +75,14 @@ public class TokenCookieAuthenticationConfigurer
         return this;
     }
 
-    public TokenCookieAuthenticationConfigurer jdbcTemplate(
-            JdbcTemplate jdbcTemplate) {
+    public TokenCookieAuthenticationConfigurer jdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+        return this;
+    }
+
+    public TokenCookieAuthenticationConfigurer userLogoutEventRepository(
+            UserLogoutEventRepository userLogoutEventRepository) {
+        this.userLogoutEventRepository = userLogoutEventRepository;
         return this;
     }
 }

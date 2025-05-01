@@ -14,7 +14,7 @@
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="7e2b3810-7765-4940-83ef-107fc5262a95">
       <console name="Connection" type="STANDARD" schema="" session="Main" />
-      <console name="ecatalog_conn" type="STANDARD" schema="" session="Main" />
+      <console name="ecatalog_conn" type="STANDARD" schema="public" session="Main"><![CDATA[UPDATE t_user SET blocked = false WHERE username = 'test';]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
@@ -24,6 +24,7 @@
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
+    <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_logout_event" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_authority" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_deactivated_token" active-filter-id="EMPTY_FILTER" />
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_info" active-filter-id="EMPTY_FILTER" />
