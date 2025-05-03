@@ -1,5 +1,6 @@
 package pro.akosarev.sandbox.security.auth;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,10 +12,8 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.csrf.CsrfFilter;
-import pro.akosarev.sandbox.entity.Token;
-import pro.akosarev.sandbox.entity.TokenAuthenticationUserDetailsService;
-import pro.akosarev.sandbox.entity.TokenUser;
-import pro.akosarev.sandbox.entity.UserLogoutEvent;
+import pro.akosarev.sandbox.entity.*;
+import pro.akosarev.sandbox.repository.UserLoginEventRepository;
 import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 
 import java.util.Date;
@@ -25,7 +24,7 @@ public class TokenCookieAuthenticationConfigurer
 
     private Function<String, Token> tokenCookieStringDeserializer;
     private UserLogoutEventRepository userLogoutEventRepository;
-
+    private UserLoginEventRepository userLoginEventRepository;
     private JdbcTemplate jdbcTemplate;
 
     @Override
@@ -54,7 +53,21 @@ public class TokenCookieAuthenticationConfigurer
         var cookieAuthenticationFilter = new AuthenticationFilter(
                 builder.getSharedObject(AuthenticationManager.class),
                 new TokenCookieAuthenticationConverter(this.tokenCookieStringDeserializer));
-        cookieAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {});
+        cookieAuthenticationFilter.setSuccessHandler((request, response, authentication) -> {
+            // Проверяем, что это новый вход (а не повторная аутентификация)
+            if (authentication != null
+                    && authentication.getPrincipal() instanceof TokenUser user
+                    && isNewLogin(request, user)) {
+                userLoginEventRepository.save(
+                        new UserLoginEvent(
+                                user.getUsername(),
+                                user.getToken().id().toString(),
+                                new Date(),
+                                request.getRemoteAddr(),
+                                request.getHeader("User-Agent")
+                        ));
+            }
+        });
         cookieAuthenticationFilter.setFailureHandler(
                 new AuthenticationEntryPointFailureHandler(
                         new Http403ForbiddenEntryPoint()
@@ -67,6 +80,11 @@ public class TokenCookieAuthenticationConfigurer
 
         builder.addFilterAfter(cookieAuthenticationFilter, CsrfFilter.class)
                 .authenticationProvider(authenticationProvider);
+    }
+
+    private boolean isNewLogin(HttpServletRequest request, TokenUser user) {
+        // Проверяем, есть ли уже событие входа для этого токена
+        return !userLoginEventRepository.existsByToken(user.getToken().id().toString());
     }
 
     public TokenCookieAuthenticationConfigurer tokenCookieStringDeserializer(
@@ -83,6 +101,12 @@ public class TokenCookieAuthenticationConfigurer
     public TokenCookieAuthenticationConfigurer userLogoutEventRepository(
             UserLogoutEventRepository userLogoutEventRepository) {
         this.userLogoutEventRepository = userLogoutEventRepository;
+        return this;
+    }
+
+    public TokenCookieAuthenticationConfigurer userLoginEventRepository(
+            UserLoginEventRepository userLoginEventRepository) {
+        this.userLoginEventRepository = userLoginEventRepository;
         return this;
     }
 }

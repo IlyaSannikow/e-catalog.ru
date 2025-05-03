@@ -46,8 +46,10 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.WebUtils;
 import pro.akosarev.sandbox.entity.User;
+import pro.akosarev.sandbox.entity.UserLoginEvent;
 import pro.akosarev.sandbox.entity.UserLogoutEvent;
 import pro.akosarev.sandbox.repository.UsedCsrfTokenRepository;
+import pro.akosarev.sandbox.repository.UserLoginEventRepository;
 import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 import pro.akosarev.sandbox.security.auth.CustomAuthenticationFailureHandler;
 import pro.akosarev.sandbox.security.auth.TokenCookieAuthenticationConfigurer;
@@ -73,6 +75,7 @@ public class SecurityConfig {
 
     private final SecurityProperties securityProperties;
     private final UserLogoutEventRepository userLogoutEventRepository;
+    private final UserLoginEventRepository userLoginEventRepository;
     private List<String> allowedOrigins;
 
     @PostConstruct
@@ -81,14 +84,16 @@ public class SecurityConfig {
     }
 
     public SecurityConfig(SecurityProperties securityProperties,
-                          UserLogoutEventRepository userLogoutEventRepository) {
+                          UserLogoutEventRepository userLogoutEventRepository, UserLoginEventRepository userLoginEventRepository) {
         this.securityProperties = securityProperties;
         this.userLogoutEventRepository = userLogoutEventRepository;
+        this.userLoginEventRepository = userLoginEventRepository;
     }
 
     @Bean
     public TokenValidationService tokenValidationService(JdbcTemplate jdbcTemplate) {
-        return new TokenValidationService(jdbcTemplate, allowedOrigins, userLogoutEventRepository);
+        return new TokenValidationService(jdbcTemplate, allowedOrigins,
+                userLogoutEventRepository, userLoginEventRepository);
     }
 
     @Bean
@@ -110,7 +115,8 @@ public class SecurityConfig {
     public TokenCookieAuthenticationConfigurer tokenCookieAuthenticationConfigurer(
             @Value("${jwt.cookie-token-key}") String cookieTokenKey,
             JdbcTemplate jdbcTemplate,
-            UserLogoutEventRepository userLogoutEventRepository) throws Exception {
+            UserLogoutEventRepository userLogoutEventRepository,
+            UserLoginEventRepository userLoginEventRepository) throws Exception {
         return new TokenCookieAuthenticationConfigurer()
                 .tokenCookieStringDeserializer(new TokenCookieJweStringDeserializer(
                         new DirectDecrypter(
@@ -118,7 +124,8 @@ public class SecurityConfig {
                         )
                 ))
                 .jdbcTemplate(jdbcTemplate)
-                .userLogoutEventRepository(userLogoutEventRepository);
+                .userLogoutEventRepository(userLogoutEventRepository)
+                .userLoginEventRepository(userLoginEventRepository);
     }
 
     @Bean
@@ -157,6 +164,9 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/")
                         .failureHandler(new RecaptchaAuthenticationFailureHandler("/login?error", recaptchaService, loginAttemptService))
+                        .successHandler((request, response, authentication) -> {
+                            response.sendRedirect("/");
+                        })
                         .permitAll())
                 .addFilterBefore(new CsrfTokenEndpointFilter(jweCsrfTokenRepository), CsrfFilter.class)
                 .addFilterBefore(new RecaptchaFilter(recaptchaService, loginAttemptService), UsernamePasswordAuthenticationFilter.class)
@@ -166,7 +176,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
-                                "/error", "/register", "/login", "/registration", "/", "/csrf-token", "/api/test-token",
+                                "/error", "/register", "/login", "/registration", "/", "/csrf-token",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session

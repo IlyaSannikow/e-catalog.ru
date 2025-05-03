@@ -72,45 +72,42 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
     @Override
     public CsrfToken generateToken(HttpServletRequest request) {
-        // Для анонимных пользователей возвращаем null
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() ||
                 authentication instanceof AnonymousAuthenticationToken) {
             return null;
         }
 
-        invalidatePreviousTokens(request);
+        invalidatePreviousTokens(authentication.getName(), request);
         String newToken = createNewToken();
         return new DefaultCsrfToken(headerName, parameterName, newToken);
     }
 
-    private void invalidatePreviousTokens(HttpServletRequest request) {
+    private void invalidatePreviousTokens(String username, HttpServletRequest request) {
         Cookie cookie = WebUtils.getCookie(request, cookieName);
         if (cookie != null) {
-            markTokenAsUsed(cookie.getValue());
+            markTokenAsUsed(cookie.getValue(), username);
         }
     }
 
     @Transactional
-    public void markTokenAsUsed(String encryptedToken) {
-        logger.debug("Marking token as used: {}", encryptedToken);
-        if (!usedCsrfTokenRepository.existsByEncryptedToken(encryptedToken)) {
+    public void markTokenAsUsed(String encryptedToken, String ownerId) {
+        logger.debug("Marking token as used: {} for owner: {}", encryptedToken, ownerId);
+        if (!usedCsrfTokenRepository.existsByEncryptedTokenAndOwnerId(encryptedToken, ownerId)) {
             Instant expiresAt = Instant.now().plusSeconds(tokenValiditySeconds);
-            UsedCsrfToken token = new UsedCsrfToken(encryptedToken, expiresAt);
+            UsedCsrfToken token = new UsedCsrfToken(encryptedToken, ownerId, expiresAt);
             usedCsrfTokenRepository.save(token);
-            logger.debug("Token marked as used and saved to DB");
-        } else {
-            logger.debug("Token already marked as used");
         }
     }
 
     @Override
     public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
-        // Не сохраняем токен для анонимных пользователей
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             return;
         }
+
+        String ownerId = authentication.getName();
 
         if (token == null) {
             response.addCookie(createExpiredCookie(request));
@@ -119,13 +116,11 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
         String encryptedToken = encryptToken(token.getToken());
 
-        // Помечаем старый токен как использованный
         Cookie oldCookie = WebUtils.getCookie(request, cookieName);
         if (oldCookie != null && !oldCookie.getValue().equals(encryptedToken)) {
-            markTokenAsUsed(oldCookie.getValue());
+            markTokenAsUsed(oldCookie.getValue(), ownerId);
         }
 
-        // Сохраняем новый токен
         Cookie cookie = new Cookie(cookieName, encryptedToken);
         cookie.setSecure(secure);
         cookie.setPath(getCookiePath(request));
@@ -133,26 +128,25 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
         cookie.setMaxAge(tokenValiditySeconds);
         response.addCookie(cookie);
 
-        // Сохраняем зашифрованный токен в базу данных
-        saveTokenToDatabase(encryptedToken, token.getToken());
+        saveTokenToDatabase(encryptedToken, ownerId, token.getToken());
     }
 
     @Transactional
-    private void saveTokenToDatabase(String encryptedToken, String plainToken) {
+    private void saveTokenToDatabase(String encryptedToken, String ownerId, String plainToken) {
         Instant expiresAt = Instant.now().plusSeconds(tokenValiditySeconds);
-        UsedCsrfToken token = new UsedCsrfToken(encryptedToken, expiresAt);
+        UsedCsrfToken token = new UsedCsrfToken(encryptedToken, ownerId, expiresAt);
         usedCsrfTokenRepository.save(token);
     }
 
     @Override
     public CsrfToken loadToken(HttpServletRequest request) {
-        // Для анонимных пользователей возвращаем null
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() ||
                 authentication instanceof AnonymousAuthenticationToken) {
             return null;
         }
 
+        String ownerId = authentication.getName();
         Cookie cookie = WebUtils.getCookie(request, cookieName);
         if (cookie == null) {
             return null;
@@ -160,7 +154,13 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
         String encryptedToken = cookie.getValue();
         String token = decryptToken(encryptedToken);
-        return token != null ? new DefaultCsrfToken(headerName, parameterName, token) : null;
+
+        // Проверяем, что токен принадлежит текущему пользователю
+        if (token != null && !usedCsrfTokenRepository.existsByEncryptedTokenAndOwnerId(encryptedToken, ownerId)) {
+            return new DefaultCsrfToken(headerName, parameterName, token);
+        }
+
+        return null;
     }
 
     private String createNewToken() {

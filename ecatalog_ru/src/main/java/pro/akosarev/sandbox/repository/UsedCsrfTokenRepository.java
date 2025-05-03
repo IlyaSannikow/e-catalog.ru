@@ -13,7 +13,7 @@ public interface UsedCsrfTokenRepository extends JpaRepository<UsedCsrfToken, St
 
     boolean existsByEncryptedToken(String encryptedToken);
 
-    boolean existsByEncryptedTokenAndExpiresAtAfter(String encryptedToken, Instant expiresAt);
+    boolean existsByEncryptedTokenAndOwnerId(String encryptedToken, String ownerId);
 
     @Modifying
     @Query("DELETE FROM UsedCsrfToken t WHERE t.expiresAt < :now")

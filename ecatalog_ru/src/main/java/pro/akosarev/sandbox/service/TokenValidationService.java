@@ -3,6 +3,7 @@ package pro.akosarev.sandbox.service;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import pro.akosarev.sandbox.repository.UserLoginEventRepository;
 import pro.akosarev.sandbox.repository.UserLogoutEventRepository;
 
 import java.net.URI;
@@ -16,40 +17,38 @@ public class TokenValidationService {
     private final JdbcTemplate jdbcTemplate;
     private final List<String> allowedOrigins;
     private final UserLogoutEventRepository userLogoutEventRepository;
+    private final UserLoginEventRepository userLoginEventRepository;
 
     public TokenValidationService(JdbcTemplate jdbcTemplate,
                                   List<String> allowedOrigins,
-                                  UserLogoutEventRepository userLogoutEventRepository) {
+                                  UserLogoutEventRepository userLogoutEventRepository, UserLoginEventRepository userLoginEventRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.allowedOrigins = allowedOrigins;
         this.userLogoutEventRepository = userLogoutEventRepository;
+        this.userLoginEventRepository = userLoginEventRepository;
     }
 
     public boolean validateToken(String token, String userId, HttpServletRequest request) {
-        System.out.println("Starting token validation for token: " + token + ", user: " + userId);
-
         // 1. Проверка origins
         if (!validateOrigin(request)) {
-            System.out.println("Token validation failed: Invalid origin");
             return false;
         }
-        System.out.println("Origin validation passed");
 
         // 2. Проверка времени жизни токена из БД
         if (!validateTokenExpiration(token)) {
-            System.out.println("Token validation failed: Token expired or not found in DB");
             return false;
         }
-        System.out.println("Token expiration validation passed");
 
         // 3. Проверка, что токен не в списке недействительных (logout)
         if (isTokenInvalidated(token, userId)) {
-            System.out.println("Token validation failed: Token was invalidated (logout)");
             return false;
         }
-        System.out.println("Token invalidation check passed");
 
-        System.out.println("Token validation successful");
+        // 4. Проверка, что токен был выдан при входе (есть в таблице login_events)
+        if (!userLoginEventRepository.existsByTokenAndUserId(token, userId)) {
+            return false;
+        }
+
         return true;
     }
 

@@ -16,6 +16,9 @@ public class UsedCsrfToken {
     @Column(name = "encrypted_token", length = 500, nullable = false, unique = true)
     private String encryptedToken;
 
+    @Column(name = "owner_id", nullable = false)
+    private String ownerId;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -26,9 +29,10 @@ public class UsedCsrfToken {
     public UsedCsrfToken() {
     }
 
-    public UsedCsrfToken(String encryptedToken, Instant expiresAt) {
+    public UsedCsrfToken(String encryptedToken, String ownerId, Instant expiresAt) {
         this.id = UUID.randomUUID().toString();
         this.encryptedToken = encryptedToken;
+        this.ownerId = ownerId;
         this.createdAt = Instant.now();
         this.expiresAt = expiresAt;
     }
