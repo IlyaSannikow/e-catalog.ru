@@ -69,6 +69,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 @Configuration
 public class SecurityConfig {
@@ -204,7 +205,14 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID", "XSRF-TOKEN")
                         .addLogoutHandler((request, response, authentication) -> {
                             if (authentication != null) {
-                                String token = extractToken(request);
+                                String token = null;
+                                if (authentication.getCredentials() instanceof String) {
+                                    token = (String) authentication.getCredentials();
+                                }
+                                if (token == null) {
+                                    token = extractToken(request);
+                                }
+
                                 if (token != null) {
                                     UserLogoutEvent event = new UserLogoutEvent();
                                     event.setUserId(authentication.getName());
@@ -221,10 +229,12 @@ public class SecurityConfig {
     }
 
     private String extractToken(HttpServletRequest request) {
+        // Попробуем из заголовка
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
+
         return null;
     }
 

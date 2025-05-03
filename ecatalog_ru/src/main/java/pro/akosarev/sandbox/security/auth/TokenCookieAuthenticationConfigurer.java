@@ -38,12 +38,6 @@ public class TokenCookieAuthenticationConfigurer
                         this.jdbcTemplate.update(
                                 "insert into t_deactivated_token (id, c_keep_until) values (?, ?)",
                                 user.getToken().id(), Date.from(user.getToken().expiresAt()));
-
-                        // Записываем событие logout
-                        userLogoutEventRepository.save(
-                                new UserLogoutEvent(user.getUsername(), new Date()));
-
-                        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
                     }
                 }));
     }

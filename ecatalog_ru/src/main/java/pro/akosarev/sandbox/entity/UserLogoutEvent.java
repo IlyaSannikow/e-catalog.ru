@@ -18,6 +18,7 @@ public class UserLogoutEvent {
     @Temporal(TemporalType.TIMESTAMP)
     private Date logoutTime;
 
+    @Column(name = "token", length = 1024)
     private String token;
 
     public String getToken() {
