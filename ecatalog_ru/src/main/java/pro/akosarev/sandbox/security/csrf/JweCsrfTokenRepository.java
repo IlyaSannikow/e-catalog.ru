@@ -11,6 +11,9 @@ import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.*;
 import org.springframework.web.util.*;
 import pro.akosarev.sandbox.entity.UsedCsrfToken;
@@ -69,8 +72,16 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
     @Override
     public CsrfToken generateToken(HttpServletRequest request) {
+        // Для анонимных пользователей возвращаем null
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
         invalidatePreviousTokens(request);
-        return new DefaultCsrfToken(headerName, parameterName, createNewToken());
+        String newToken = createNewToken();
+        return new DefaultCsrfToken(headerName, parameterName, newToken);
     }
 
     private void invalidatePreviousTokens(HttpServletRequest request) {
@@ -95,6 +106,12 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
     @Override
     public void saveToken(CsrfToken token, HttpServletRequest request, HttpServletResponse response) {
+        // Не сохраняем токен для анонимных пользователей
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
+            return;
+        }
+
         if (token == null) {
             response.addCookie(createExpiredCookie(request));
             return;
@@ -102,37 +119,46 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
 
         String encryptedToken = encryptToken(token.getToken());
 
-        // Не помечаем старый токен как использованный при генерации нового
+        // Помечаем старый токен как использованный
         Cookie oldCookie = WebUtils.getCookie(request, cookieName);
         if (oldCookie != null && !oldCookie.getValue().equals(encryptedToken)) {
-            // Можно добавить задержку перед инвалидацией старого токена
-            new Thread(() -> {
-                try {
-                    Thread.sleep(5000); // Даем 5 секунд на завершение текущих запросов
-                    markTokenAsUsed(oldCookie.getValue());
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-            }).start();
+            markTokenAsUsed(oldCookie.getValue());
         }
 
+        // Сохраняем новый токен
         Cookie cookie = new Cookie(cookieName, encryptedToken);
         cookie.setSecure(secure);
         cookie.setPath(getCookiePath(request));
         cookie.setHttpOnly(true);
         cookie.setMaxAge(tokenValiditySeconds);
         response.addCookie(cookie);
+
+        // Сохраняем зашифрованный токен в базу данных
+        saveTokenToDatabase(encryptedToken, token.getToken());
+    }
+
+    @Transactional
+    private void saveTokenToDatabase(String encryptedToken, String plainToken) {
+        Instant expiresAt = Instant.now().plusSeconds(tokenValiditySeconds);
+        UsedCsrfToken token = new UsedCsrfToken(encryptedToken, expiresAt);
+        usedCsrfTokenRepository.save(token);
     }
 
     @Override
     public CsrfToken loadToken(HttpServletRequest request) {
+        // Для анонимных пользователей возвращаем null
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() ||
+                authentication instanceof AnonymousAuthenticationToken) {
+            return null;
+        }
+
         Cookie cookie = WebUtils.getCookie(request, cookieName);
         if (cookie == null) {
             return null;
         }
 
         String encryptedToken = cookie.getValue();
-        System.out.println("enc: " + encryptedToken);
         String token = decryptToken(encryptedToken);
         return token != null ? new DefaultCsrfToken(headerName, parameterName, token) : null;
     }
@@ -177,9 +203,6 @@ public class JweCsrfTokenRepository implements CsrfTokenRepository {
             JWEObject jweObject = JWEObject.parse(encryptedToken);
             jweObject.decrypt(decrypter);
             String decryptedToken = jweObject.getPayload().toString();
-
-            // Логируем расшифрованный токен
-            logger.debug("Decrypted CSRF token. Encrypted: {}, Decrypted: {}", encryptedToken, decryptedToken);
 
             return decryptedToken;
         } catch (Exception e) {

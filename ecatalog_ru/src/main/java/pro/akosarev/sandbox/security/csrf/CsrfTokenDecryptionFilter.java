@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
@@ -31,6 +34,13 @@ public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         if (!requiresCsrfCheck(request)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Проверяем аутентификацию пользователя
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -66,8 +76,7 @@ public class CsrfTokenDecryptionFilter extends OncePerRequestFilter {
             return;
         }
 
-        logger.info("Valid CSRF token received. Encrypted: {}, Decrypted: {}",
-                encryptedToken, decryptedToken);
+        logger.debug("Valid CSRF token received");
         request.setAttribute(csrfTokenRepository.getParameterName(), decryptedToken);
 
         filterChain.doFilter(request, response);

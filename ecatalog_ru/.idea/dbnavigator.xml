@@ -21,7 +21,9 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files />
+    <open-files>
+      <object connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" object-ref="schemas/public/tables/used_csrf_tokens" />
+    </open-files>
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="7e2b3810-7765-4940-83ef-107fc5262a95" dataset="public.t_user_logout_event" active-filter-id="EMPTY_FILTER" />

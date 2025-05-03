@@ -24,15 +24,6 @@ public class CsrfTokenEndpointFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         if ("/csrf-token".equals(request.getRequestURI()) && "GET".equalsIgnoreCase(request.getMethod())) {
             try {
-                // Логируем текущий токен (если есть) перед генерацией нового
-                CsrfToken currentToken = csrfTokenRepository.loadToken(request);
-                if (currentToken != null) {
-                    System.out.println("Current CSRF token (encrypted):" +  currentToken.getToken());
-                } else {
-                    System.out.println("No existing CSRF token found");
-                }
-
-                // Генерируем и сохраняем новый токен
                 CsrfToken newToken = csrfTokenRepository.generateToken(request);
                 csrfTokenRepository.saveToken(newToken, request, response);
 

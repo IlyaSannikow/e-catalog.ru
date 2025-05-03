@@ -19,12 +19,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -68,7 +71,7 @@ import java.util.function.Supplier;
 @Configuration
 public class SecurityConfig {
 
-    private SecurityProperties securityProperties;
+    private final SecurityProperties securityProperties;
     private final UserLogoutEventRepository userLogoutEventRepository;
     private List<String> allowedOrigins;
 
@@ -83,7 +86,6 @@ public class SecurityConfig {
         this.userLogoutEventRepository = userLogoutEventRepository;
     }
 
-    // Новые бины для работы с токенами
     @Bean
     public TokenValidationService tokenValidationService(JdbcTemplate jdbcTemplate) {
         return new TokenValidationService(jdbcTemplate, allowedOrigins, userLogoutEventRepository);
@@ -96,7 +98,6 @@ public class SecurityConfig {
         ).build();
     }
 
-    // Остальные бины остаются без изменений
     @Bean
     public TokenCookieJweStringSerializer tokenCookieJweStringSerializer(
             @Value("${jwt.cookie-token-key}") String cookieTokenKey) throws Exception {
@@ -165,7 +166,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
-                                "/error", "/register", "/login", "/registration", "/", "/csrf-token",
+                                "/error", "/register", "/login", "/registration", "/", "/csrf-token", "/api/test-token",
                                 "index.html", "/registration.html").permitAll()
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
@@ -174,7 +175,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(jweCsrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler(jweCsrfTokenRepository))
-                        .ignoringRequestMatchers("/public/**", "/csrf-token"))
+                        .ignoringRequestMatchers("/public/**", "/csrf-token")
+                        .requireCsrfProtectionMatcher(request -> {
+                            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                            if (auth == null || !auth.isAuthenticated() ||
+                                    auth instanceof AnonymousAuthenticationToken) {
+                                return false;
+                            }
+
+                            String method = request.getMethod();
+                            return "POST".equals(method) || "PUT".equals(method) ||
+                                    "PATCH".equals(method) || "DELETE".equals(method);
+                        }))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
@@ -215,28 +227,34 @@ public class SecurityConfig {
 
         @Override
         public void handle(HttpServletRequest request, HttpServletResponse response,
-                           Supplier<CsrfToken> csrfToken) {
-            // Генерируем токен только если его нет
-            if (request.getAttribute(csrfToken.get().getParameterName()) == null) {
-                CsrfToken token = csrfToken.get();
-                request.setAttribute(token.getParameterName(), token.getToken());
+                           Supplier<CsrfToken> csrfTokenSupplier) {
+            CsrfToken csrfToken = csrfTokenSupplier.get();
+
+            // Если токен не null и еще не установлен в атрибуты запроса
+            if (csrfToken != null && request.getAttribute(csrfToken.getParameterName()) == null) {
+                request.setAttribute(csrfToken.getParameterName(), csrfToken.getToken());
             }
         }
 
         @Override
         public String resolveCsrfTokenValue(HttpServletRequest request, CsrfToken csrfToken) {
-            // Проверяем атрибуты запроса (установленные фильтром)
+            if (csrfToken == null) {
+                return null;
+            }
+
+            // 1. Проверяем атрибуты запроса (установленные фильтром)
             String decryptedToken = (String) request.getAttribute(csrfToken.getParameterName());
             if (decryptedToken != null) {
                 return decryptedToken;
             }
 
-            // Получаем из куки
+            // 2. Получаем из куки
             Cookie cookie = WebUtils.getCookie(request, tokenRepository.getCookieName());
             if (cookie != null) {
                 String token = tokenRepository.decryptToken(cookie.getValue());
-                System.out.println("Resolved CSRF token from cookie. Encrypted: " +  cookie.getValue() + " Decrypted: " + token);
-                return token;
+                if (token != null) {
+                    return token;
+                }
             }
 
             return null;

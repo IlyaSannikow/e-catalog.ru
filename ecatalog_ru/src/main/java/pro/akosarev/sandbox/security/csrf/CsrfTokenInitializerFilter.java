@@ -4,7 +4,9 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -29,14 +31,17 @@ public class CsrfTokenInitializerFilter extends OncePerRequestFilter {
             if (!request.getRequestURI().startsWith("/js/") &&
                     !request.getRequestURI().startsWith("/css/") &&
                     !request.getRequestURI().startsWith("/images/") &&
-                    !request.getRequestURI().equals("/login") &&
-                    !(SecurityContextHolder.getContext().getAuthentication() instanceof UsernamePasswordAuthenticationToken)) {
+                    !request.getRequestURI().equals("/login")) {
 
-                CsrfToken existingToken = tokenRepository.loadToken(request);
-                if (existingToken == null || isTokenUsedOrExpired(existingToken.getToken())) {
-                    CsrfToken newToken = tokenRepository.generateToken(request);
-                    if (WebUtils.getCookie(request, tokenRepository.getCookieName()) == null) {
-                        tokenRepository.saveToken(newToken, request, response);
+                // Проверяем аутентификацию пользователя
+                Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+                if (authentication != null && authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken)) {
+                    CsrfToken existingToken = tokenRepository.loadToken(request);
+                    if (existingToken == null || isTokenUsedOrExpired(existingToken.getToken())) {
+                        CsrfToken newToken = tokenRepository.generateToken(request);
+                        if (newToken != null && WebUtils.getCookie(request, tokenRepository.getCookieName()) == null) {
+                            tokenRepository.saveToken(newToken, request, response);
+                        }
                     }
                 }
             }
