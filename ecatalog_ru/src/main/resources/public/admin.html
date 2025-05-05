@@ -6,5 +6,45 @@
 </head>
 <body>
     <h1>Привет админ!</h1>
+    <button onclick="triggerBackup()">Создать бэкап</button>
+
+    <script>
+        async function triggerBackup() {
+            if (!confirm("Вы уверены, что хотите запустить создание бэкапа?")) {
+                return;
+            }
+
+            try {
+                // 1. Получаем CSRF токен
+                const tokenResponse = await fetch("/csrf-token", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (!tokenResponse.ok) {
+                    throw new Error('Не удалось получить CSRF токен');
+                }
+
+                // 2. Отправляем запрос на создание бэкапа
+                const response = await fetch("/api/admin/backup", {
+                    method: "POST",
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Content-Type": "application/json"
+                        // CSRF токен автоматически подставится из куки
+                    },
+                    credentials: "include"
+                });
+
+                if (!response.ok) {
+                    const error = await response.text();
+                    throw new Error(error || 'Ошибка при создании бэкапа');
+                }
+            } catch (error) {
+                console.error('Ошибка при создании бэкапа:', error);
+                alert("Не удалось создать бэкап: " + error.message);
+            }
+        }
+    </script>
 </body>
 </html>

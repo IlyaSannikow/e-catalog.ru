@@ -67,6 +67,10 @@ security:
     - "https://localhost:8443"
     - "https://127.0.0.1:8443"
 
+backup:
+  retention-days: 7  # хранить бэкапы 7 дней
+  compression-level: 6  # уровень сжатия (1-9)
+
 server:
   port: 8443
   http2:

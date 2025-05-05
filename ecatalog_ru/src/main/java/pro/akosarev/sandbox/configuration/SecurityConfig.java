@@ -177,7 +177,7 @@ public class SecurityConfig {
                 .addFilterBefore(new CsrfTokenDecryptionFilter(jweCsrfTokenRepository, allowedOrigins), CsrfFilter.class)
                 .addFilterBefore(new TokenValidationFilter(tokenValidationService, jwtDecoder), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin","/api/admin/backup").hasRole("ADMIN")
                         .requestMatchers("/public/**", "/js/**", "/resources/**",
                                 "/error", "/register", "/login", "/registration", "/", "/csrf-token",
                                 "index.html", "/registration.html").permitAll()
