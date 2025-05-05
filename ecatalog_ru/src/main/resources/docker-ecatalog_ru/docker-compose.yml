@@ -54,6 +54,14 @@ services:
       --latency-monitor-threshold 100
       --slowlog-log-slower-than 10000
       --slowlog-max-len 128
+      --maxmemory 1gb
+      --maxmemory-policy allkeys-lru
+      --hz 10
+      --activedefrag yes
+      --lazyfree-lazy-eviction yes
+      --lazyfree-lazy-expire yes
+      --lazyfree-lazy-server-del yes
+      --replica-lazy-flush yes
     healthcheck:
       test: [ "CMD", "redis-cli", "--tls", "--cacert", "/usr/local/etc/redis/certs/public.crt", "-a", "${REDIS_PASSWORD:-securepass}", "ping" ]
       interval: 30s

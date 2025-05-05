@@ -151,7 +151,8 @@ public class SecurityConfig {
             CustomAuthenticationFailureHandler failureHandler,
             RecaptchaService recaptchaService,
             TokenValidationService tokenValidationService,
-            JwtDecoder jwtDecoder) throws Exception {
+            JwtDecoder jwtDecoder,
+            RateLimitFilter rateLimitFilter) throws Exception {
 
         var tokenCookieSessionAuthenticationStrategy = new TokenCookieSessionAuthenticationStrategy();
         tokenCookieSessionAuthenticationStrategy.setTokenStringSerializer(tokenCookieJweStringSerializer);
@@ -160,6 +161,7 @@ public class SecurityConfig {
 
         http
                 .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")

@@ -2,7 +2,16 @@ spring:
   thymeleaf:
     prefix: classpath:/public/
     suffix: .html
-
+  redis:
+    url: rediss://localhost:6379
+    password: securepass
+    timeout: 5000ms
+    lettuce:
+      pool:
+        max-active: 50
+        max-idle: 20
+        min-idle: 5
+        max-wait: 3000ms
   datasource:
     url: jdbc:postgresql://localhost:5432/ecatalog_db
     username: postgres
@@ -24,6 +33,32 @@ google:
     site-key: "6Ld0uBErAAAAAFRfBnNNFWk6ukiGHnxgzTJBigPo"
 
 security:
+  rate-limit:
+    global:
+      max-requests: 100
+      duration-min: 1
+      block-duration-min: 1
+    public:
+      max-requests: 50
+      duration-min: 1
+      block-duration-min: 1
+    protected:
+      max-requests: 60
+      duration-min: 1
+      block-duration-min: 1
+    critical:
+      max-requests: 30
+      duration-min: 1
+      block-duration-min: 1
+    endpoints:
+      register:
+        max-requests: 100
+        duration-min: 1
+        block-duration-min: 1
+      upload:
+        max-requests: 200
+        duration-min: 1
+        block-duration-min: 1
   captcha:
     enabled: true
     max-attempts: 3       # после скольки неудачных попыток блокировать
