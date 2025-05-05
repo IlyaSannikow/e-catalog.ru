@@ -14,14 +14,12 @@ public class UserAuthority {
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
 
-    private String authority;
+    @ManyToOne
+    @JoinColumn(name = "id_role", nullable = false)
+    private Role role;
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public User getUser() {
@@ -32,11 +30,16 @@ public class UserAuthority {
         this.user = user;
     }
 
-    public String getAuthority() {
-        return authority;
+    public Role getRole() {
+        return role;
     }
 
-    public void setAuthority(String authority) {
-        this.authority = authority;
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    // Метод для совместимости с GrantedAuthority
+    public String getAuthority() {
+        return role != null ? role.getName() : null;
     }
 }

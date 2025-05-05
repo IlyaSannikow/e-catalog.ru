@@ -299,7 +299,9 @@ public class SecurityConfig {
             }
 
             try {
-                User user = entityManager.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.authorities WHERE u.username = :username", User.class)
+                User user = entityManager.createQuery(
+                                "SELECT u FROM User u LEFT JOIN FETCH u.authorities auth LEFT JOIN FETCH auth.role WHERE u.username = :username",
+                                User.class)
                         .setParameter("username", username)
                         .getSingleResult();
                 return user;
