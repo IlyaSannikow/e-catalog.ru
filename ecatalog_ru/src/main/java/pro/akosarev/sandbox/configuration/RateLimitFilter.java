@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import pro.akosarev.sandbox.entity.RateLimitConfig;
@@ -39,6 +41,15 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
         // Пропускаем статические ресурсы
         if (shouldSkipRateLimit(requestUri)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Пропускаем rate limiting для администраторов
+        if (authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             filterChain.doFilter(request, response);
             return;
         }

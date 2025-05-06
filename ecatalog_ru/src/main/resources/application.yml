@@ -12,6 +12,9 @@ spring:
         max-idle: 20
         min-idle: 5
         max-wait: 3000ms
+    admin:
+      pool:
+        size: 5 # Размер пула для администраторов
   datasource:
     url: jdbc:postgresql://localhost:5432/ecatalog_db
     username: postgres
@@ -34,6 +37,10 @@ google:
 
 security:
   rate-limit:
+    admin:
+      max-requests: 1000  # Большой лимит для администраторов
+      duration-min: 1
+      block-duration-min: 0
     global:
       max-requests: 100
       duration-min: 1
@@ -42,7 +49,7 @@ security:
       max-requests: 50
       duration-min: 1
       block-duration-min: 1
-    protected:
+    protected: # БД
       max-requests: 60
       duration-min: 1
       block-duration-min: 1
