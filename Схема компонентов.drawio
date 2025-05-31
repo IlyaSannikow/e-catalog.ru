@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.0.6" pages="3">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.0.6" pages="4">
   <diagram id="ubxbVhCTThVBihHKbjnr" name="Абстрактные компоненты">
     <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -274,6 +274,61 @@
         </mxCell>
         <mxCell id="s1OmYBTIJwkmS3Hd7GY_-29" value="Доступ к ресурсу" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="10" y="240" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="0LqqjlUxgVj1hzoVLQ0J" name="Redis">
+    <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-1" target="gN2Wp_eIzsFprjNeaTeA-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-6" value="HTTPS&lt;div&gt;запрос&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-3">
+          <mxGeometry x="-0.08" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-1" value="Клиент" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-2" target="gN2Wp_eIzsFprjNeaTeA-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-9" value="Проверяет лимит&lt;div&gt;запросов&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-8">
+          <mxGeometry x="-0.092" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-2" value="RateLimitFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-7" target="gN2Wp_eIzsFprjNeaTeA-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-12" value="сохраняет/проверяет&lt;div&gt;блокировки&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-11">
+          <mxGeometry x="-0.104" y="-1" relative="1" as="geometry">
+            <mxPoint x="1" y="-16" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-7" value="RateLimiter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="470" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-10" value="Redis" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="73" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-13" target="gN2Wp_eIzsFprjNeaTeA-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-15" value="Настраивает&lt;div&gt;подключение&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-14">
+          <mxGeometry x="-0.1564" y="-1" relative="1" as="geometry">
+            <mxPoint x="5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-13" value="RedisConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="73" width="120" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
