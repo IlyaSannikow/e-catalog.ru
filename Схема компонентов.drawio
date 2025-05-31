@@ -14,6 +14,14 @@
             <mxPoint y="2" as="offset" />
           </mxGeometry>
         </mxCell>
+        <mxCell id="kkMSw3z8SaAJTypz9wPj-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-1" target="kkMSw3z8SaAJTypz9wPj-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="kkMSw3z8SaAJTypz9wPj-47" value="HTTPS запрос" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kkMSw3z8SaAJTypz9wPj-46">
+          <mxGeometry x="0.5348" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-1" value="Браузер" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="10" y="10" width="70" height="30" as="geometry" />
         </mxCell>
@@ -30,12 +38,17 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kkMSw3z8SaAJTypz9wPj-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-9" target="kkMSw3z8SaAJTypz9wPj-43">
+        <mxCell id="kkMSw3z8SaAJTypz9wPj-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-9" target="kkMSw3z8SaAJTypz9wPj-44">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="310" y="145" />
-              <mxPoint x="310" y="233" />
+              <mxPoint x="310" y="225" />
             </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kkMSw3z8SaAJTypz9wPj-50" value="Сверка&lt;div&gt;ответов&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kkMSw3z8SaAJTypz9wPj-48">
+          <mxGeometry x="-0.0075" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-5" value="Приложение" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
