@@ -171,11 +171,119 @@
       </root>
     </mxGraphModel>
   </diagram>
-  <diagram id="1BNOT1RY-crdsF95r63d" name="Страница — 3">
-    <mxGraphModel grid="1" page="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+  <diagram id="1BNOT1RY-crdsF95r63d" name="Фильтры">
+    <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-1" target="s1OmYBTIJwkmS3Hd7GY_-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-6" value="Записываем действия&amp;nbsp;&lt;div&gt;пользователей на сайте&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-5">
+          <mxGeometry x="-0.1927" y="-2" relative="1" as="geometry">
+            <mxPoint x="17" y="-2" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-1" value="Входящий запрос" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-2" target="s1OmYBTIJwkmS3Hd7GY_-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-8" value="Проверка лимитов&lt;div&gt;запросов&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-7">
+          <mxGeometry x="-0.172" y="-1" relative="1" as="geometry">
+            <mxPoint x="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-2" value="AuthentificationTimingFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="10" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-3" target="s1OmYBTIJwkmS3Hd7GY_-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-10" value="Проверка reCAPTCHA&lt;div&gt;для /login&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-9">
+          <mxGeometry x="-0.02" y="-3" relative="1" as="geometry">
+            <mxPoint y="-5" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-3" value="RateLimitFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-4" target="s1OmYBTIJwkmS3Hd7GY_-11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-13" value="Проверка JWT&lt;div&gt;токена&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-12">
+          <mxGeometry x="0.1169" y="-3" relative="1" as="geometry">
+            <mxPoint x="9" y="3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-4" value="RecaptchaFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="90" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-11" target="s1OmYBTIJwkmS3Hd7GY_-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-16" value="Дешифровка CSRF&lt;div&gt;токена&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-15">
+          <mxGeometry x="-0.0073" y="-1" relative="1" as="geometry">
+            <mxPoint x="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-11" value="TokenValidationFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="90" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-14" target="s1OmYBTIJwkmS3Hd7GY_-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-19" value="Генерация токена&lt;div&gt;CSRF&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-18">
+          <mxGeometry x="-0.184" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-14" value="CsrfTokenDecryptionFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="90" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-17" target="s1OmYBTIJwkmS3Hd7GY_-20">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-22" value="Создаем CSRF токен для&lt;div&gt;аутентифицированного токена&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-21">
+          <mxGeometry x="-0.0246" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-17" value="CsrfTokenEndpointFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="170" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-24" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-20" target="s1OmYBTIJwkmS3Hd7GY_-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-25" value="Обрабатывает данные&lt;div&gt;формы в /login&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-24">
+          <mxGeometry x="0.5787" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-20" value="CsrfTokenInitializerFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="170" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-23" target="s1OmYBTIJwkmS3Hd7GY_-26">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-28" value="Проверка csrf&lt;div&gt;токена&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="s1OmYBTIJwkmS3Hd7GY_-27">
+          <mxGeometry x="0.1575" y="1" relative="1" as="geometry">
+            <mxPoint x="14" y="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-23" value="UsernamePasswordAuthetificationFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="240" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-30" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="s1OmYBTIJwkmS3Hd7GY_-26" target="s1OmYBTIJwkmS3Hd7GY_-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-26" value="CsrfFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="240" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s1OmYBTIJwkmS3Hd7GY_-29" value="Доступ к ресурсу" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="240" width="120" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
