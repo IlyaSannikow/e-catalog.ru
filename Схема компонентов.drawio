@@ -14,28 +14,28 @@
             <mxPoint y="2" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kkMSw3z8SaAJTypz9wPj-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.25;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-1" target="kkMSw3z8SaAJTypz9wPj-43">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="kkMSw3z8SaAJTypz9wPj-47" value="HTTPS форма" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kkMSw3z8SaAJTypz9wPj-46">
-          <mxGeometry x="0.5348" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-1" value="Браузер" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="10" y="10" width="70" height="30" as="geometry" />
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-5" target="kkMSw3z8SaAJTypz9wPj-17">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="320" y="58" />
-              <mxPoint x="320" y="65" />
+              <mxPoint x="340" y="58" />
+              <mxPoint x="340" y="65" />
             </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-41" value="Веб&lt;div&gt;интерфейс&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="kkMSw3z8SaAJTypz9wPj-19">
           <mxGeometry x="0.219" y="-3" relative="1" as="geometry">
             <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kkMSw3z8SaAJTypz9wPj-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-9" target="kkMSw3z8SaAJTypz9wPj-43">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="310" y="145" />
+              <mxPoint x="310" y="233" />
+            </Array>
           </mxGeometry>
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-5" value="Приложение" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
@@ -64,7 +64,7 @@
           </mxGeometry>
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-14" value="Docker" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
-          <mxGeometry x="400" y="20" width="270" height="120" as="geometry" />
+          <mxGeometry x="423.5" y="20" width="270" height="120" as="geometry" />
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="kkMSw3z8SaAJTypz9wPj-14" source="kkMSw3z8SaAJTypz9wPj-17" target="kkMSw3z8SaAJTypz9wPj-25">
           <mxGeometry relative="1" as="geometry" />
@@ -82,13 +82,13 @@
           <mxGeometry x="20" y="80" width="100" height="30" as="geometry" />
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-38" value="Postgres" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="400" y="160" width="90" height="60" as="geometry" />
+          <mxGeometry x="423.5" y="160" width="90" height="60" as="geometry" />
         </mxCell>
         <mxCell id="kkMSw3z8SaAJTypz9wPj-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kkMSw3z8SaAJTypz9wPj-5" target="kkMSw3z8SaAJTypz9wPj-38">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
-              <mxPoint x="320" y="58" />
-              <mxPoint x="320" y="190" />
+              <mxPoint x="340" y="58" />
+              <mxPoint x="340" y="190" />
             </Array>
           </mxGeometry>
         </mxCell>
