@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.0.6" pages="4">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.1.1" pages="5">
   <diagram id="ubxbVhCTThVBihHKbjnr" name="Абстрактные компоненты">
     <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -329,6 +329,72 @@
         </mxCell>
         <mxCell id="gN2Wp_eIzsFprjNeaTeA-13" value="RedisConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="130" y="73" width="120" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="whDwtTF9o9KhNX36SGGz" name="RedisConfig">
+    <mxGraphModel dx="994" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E2WDYQXXLyvTMrqoIHT7-1" target="E2WDYQXXLyvTMrqoIHT7-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-13" value="Создает основной&lt;div&gt;пул соединений&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="E2WDYQXXLyvTMrqoIHT7-4">
+          <mxGeometry x="0.0067" relative="1" as="geometry">
+            <mxPoint x="19" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E2WDYQXXLyvTMrqoIHT7-1" target="E2WDYQXXLyvTMrqoIHT7-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="25" />
+              <mxPoint x="140" y="95" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-14" value="Создает пул&lt;div&gt;соединений для&amp;nbsp;&lt;/div&gt;&lt;div&gt;админов&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="E2WDYQXXLyvTMrqoIHT7-5">
+          <mxGeometry x="0.3728" y="1" relative="1" as="geometry">
+            <mxPoint x="8" y="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-1" value="RedisConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E2WDYQXXLyvTMrqoIHT7-2" target="E2WDYQXXLyvTMrqoIHT7-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-2" value="redisConectionFactory" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="10" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="E2WDYQXXLyvTMrqoIHT7-3" target="E2WDYQXXLyvTMrqoIHT7-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-3" value="adminRedisConectionFactory" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="80" width="170" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-6" value="redisTemplate" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="10" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-7" value="adminRedisTemplate" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="580" y="80" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.75;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="E2WDYQXXLyvTMrqoIHT7-10" target="E2WDYQXXLyvTMrqoIHT7-1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="78" y="120" />
+              <mxPoint x="78" y="80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-12" value="Передает параметры&lt;div&gt;для настройки&lt;/div&gt;&lt;div&gt;соединений&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="E2WDYQXXLyvTMrqoIHT7-11">
+          <mxGeometry x="-0.0488" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="E2WDYQXXLyvTMrqoIHT7-10" value="Файл с настройками&lt;div&gt;(application.yml)&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="120" width="120" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
