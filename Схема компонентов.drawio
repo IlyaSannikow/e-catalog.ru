@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.1.1" pages="6">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.1.1" pages="7">
   <diagram id="ubxbVhCTThVBihHKbjnr" name="Абстрактные компоненты">
     <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -532,6 +532,61 @@
         </mxCell>
         <mxCell id="7QNuWqeNF9ZkeapQGGoF-24" value="SpaCsrfTokenRequestHanler" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="120" y="80" width="170" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="bLVs5GQTxT5g6xD4ZswO" name="MinIo">
+    <mxGraphModel dx="904" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="KAuZ7iDu31i-45dAMKyR-1" target="KAuZ7iDu31i-45dAMKyR-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-4" value="Настройки&lt;div&gt;безопасности и&lt;/div&gt;&lt;div&gt;работы&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KAuZ7iDu31i-45dAMKyR-3">
+          <mxGeometry x="-0.1491" relative="1" as="geometry">
+            <mxPoint x="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-1" value="MinIoConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="KAuZ7iDu31i-45dAMKyR-2" target="KAuZ7iDu31i-45dAMKyR-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-7" value="Работа с&lt;div&gt;файлами&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KAuZ7iDu31i-45dAMKyR-6">
+          <mxGeometry x="-0.124" relative="1" as="geometry">
+            <mxPoint x="6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-2" value="MinIoClient" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-5" value="MinIoServer" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="10" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="KAuZ7iDu31i-45dAMKyR-8" target="KAuZ7iDu31i-45dAMKyR-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-11" value="Создание бэкапа&lt;div&gt;БД&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KAuZ7iDu31i-45dAMKyR-10">
+          <mxGeometry x="-0.1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="KAuZ7iDu31i-45dAMKyR-8" target="KAuZ7iDu31i-45dAMKyR-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-14" value="Проверка на наличие&lt;div&gt;подходящих прав и роли&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="KAuZ7iDu31i-45dAMKyR-13">
+          <mxGeometry x="-0.0427" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-8" value="BackupService" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="100" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KAuZ7iDu31i-45dAMKyR-12" value="SecurityConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="550" y="100" width="120" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
