@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.1.1" pages="11">
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 YaBrowser/25.4.0.0 Safari/537.36" version="27.1.1" pages="12">
   <diagram id="ubxbVhCTThVBihHKbjnr" name="Абстрактные компоненты">
     <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -1049,7 +1049,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="A9FG5igHYkw5GUeQnxPw" name="CSRF Gen">
-    <mxGraphModel dx="904" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="994" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -1121,6 +1121,111 @@
           <mxGeometry width="80" relative="1" as="geometry">
             <mxPoint x="344.5" y="295" as="sourcePoint" />
             <mxPoint x="39.5" y="295" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="5yQ6vPx3RDgt5LB4F5B7" name="CSRF Check">
+    <mxGraphModel dx="994" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-1" value="Браузер" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="10" y="10" width="70" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-3" value="CsrfToken&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Endpoint&lt;/span&gt;&lt;div&gt;Filter&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="120" y="10" width="110" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-4" value="JweCsrfToken&lt;div&gt;Repository&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="280" y="10" width="110" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-5" value="UsedCsrfToken&lt;div&gt;Repository&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="440" y="10" width="110" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-6" value="CsrfTokenDecryption&lt;div&gt;Filter&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="610" y="10" width="120" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-7" value="Controller" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};size=30;" vertex="1" parent="1">
+          <mxGeometry x="780" y="10" width="70" height="350" as="geometry" />
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-8" value="GET /csrf-token" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="44.5" y="65" as="sourcePoint" />
+            <mxPoint x="174.5" y="65" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-9" value="generateToken()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="174.5" y="80" as="sourcePoint" />
+            <mxPoint x="334.5" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-10" value="сохраняем токен" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="334" y="100" as="sourcePoint" />
+            <mxPoint x="494" y="100" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-11" value="Сохранение куки" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="174.5" y="120" as="sourcePoint" />
+            <mxPoint x="44.5" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-12" value="POST /changePassword" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="44.5" y="145" as="sourcePoint" />
+            <mxPoint x="814.5" y="145" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-13" value="Проверка CSRF" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="814.5" y="175" as="sourcePoint" />
+            <mxPoint x="669.5" y="175" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-14" value="decryptToken()" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="669.5" y="190" as="sourcePoint" />
+            <mxPoint x="334.5" y="190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-19" value="Расшифрованный токен" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="334.5" y="215" as="sourcePoint" />
+            <mxPoint x="669.5" y="215" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-20" value="Токен не был использован?" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="669.5" y="240" as="sourcePoint" />
+            <mxPoint x="494.5" y="240" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-21" value="Нет" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="494.5" y="265" as="sourcePoint" />
+            <mxPoint x="669.5" y="265" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-22" value="Помечаем токен&lt;div&gt;как использованный&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry x="0.0229" y="20" width="80" relative="1" as="geometry">
+            <mxPoint x="669.5" y="300" as="sourcePoint" />
+            <mxPoint x="494.5" y="300" as="targetPoint" />
+            <mxPoint x="1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-24" value="Пропускам запрос" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="nEMXQ82lhI4YzNDjKf-C-7">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="670" y="320" as="sourcePoint" />
+            <mxPoint x="750" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nEMXQ82lhI4YzNDjKf-C-25" value="Запрос выполнен" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="80" relative="1" as="geometry">
+            <mxPoint x="814.5" y="340" as="sourcePoint" />
+            <mxPoint x="44.5" y="340" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
