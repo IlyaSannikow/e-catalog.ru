@@ -173,7 +173,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="1BNOT1RY-crdsF95r63d" name="Фильтры">
-    <mxGraphModel dx="994" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="592" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -280,56 +280,58 @@
     </mxGraphModel>
   </diagram>
   <diagram id="0LqqjlUxgVj1hzoVLQ0J" name="Redis">
-    <mxGraphModel dx="901" dy="531" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="994" dy="556" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-1" target="gN2Wp_eIzsFprjNeaTeA-2">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="gN2Wp_eIzsFprjNeaTeA-1" target="gN2Wp_eIzsFprjNeaTeA-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="184" y="25" as="sourcePoint" />
+          </mxGeometry>
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-6" value="HTTPS&lt;div&gt;запрос&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-3">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-6" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;HTTPS&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;запрос&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="gN2Wp_eIzsFprjNeaTeA-3" vertex="1" connectable="0">
           <mxGeometry x="-0.08" y="1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-1" value="Клиент" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-1" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Клиент&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
           <mxGeometry x="10" y="10" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-2" target="gN2Wp_eIzsFprjNeaTeA-7">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="gN2Wp_eIzsFprjNeaTeA-2" target="gN2Wp_eIzsFprjNeaTeA-7" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-9" value="Проверяет лимит&lt;div&gt;запросов&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-8">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-9" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Проверяет лимит&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;запросов&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="gN2Wp_eIzsFprjNeaTeA-8" vertex="1" connectable="0">
           <mxGeometry x="-0.092" y="-1" relative="1" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-2" value="RateLimitFilter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="220" y="10" width="120" height="30" as="geometry" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;RateLimitFilter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="240" y="10" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-7" target="gN2Wp_eIzsFprjNeaTeA-10">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;startArrow=classic;startFill=1;" parent="1" source="gN2Wp_eIzsFprjNeaTeA-7" target="gN2Wp_eIzsFprjNeaTeA-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-12" value="сохраняет/проверяет&lt;div&gt;блокировки&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-11">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-12" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;сохраняет/проверяет&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;блокировки&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="gN2Wp_eIzsFprjNeaTeA-11" vertex="1" connectable="0">
           <mxGeometry x="-0.104" y="-1" relative="1" as="geometry">
-            <mxPoint x="1" y="-16" as="offset" />
+            <mxPoint x="-32" y="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-7" value="RateLimiter" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="470" y="10" width="120" height="30" as="geometry" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-7" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;RateLimiter&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="530" y="10" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-10" value="Redis" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="360" y="73" width="120" height="30" as="geometry" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-10" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Redis&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="294" y="73" width="120" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="gN2Wp_eIzsFprjNeaTeA-13" target="gN2Wp_eIzsFprjNeaTeA-10">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="gN2Wp_eIzsFprjNeaTeA-13" target="gN2Wp_eIzsFprjNeaTeA-10" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-15" value="Настраивает&lt;div&gt;подключение&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="gN2Wp_eIzsFprjNeaTeA-14">
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-15" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Настраивает&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;подключение&lt;/font&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="gN2Wp_eIzsFprjNeaTeA-14" vertex="1" connectable="0">
           <mxGeometry x="-0.1564" y="-1" relative="1" as="geometry">
             <mxPoint x="5" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="gN2Wp_eIzsFprjNeaTeA-13" value="RedisConfig" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="130" y="73" width="120" height="30" as="geometry" />
+        <mxCell id="gN2Wp_eIzsFprjNeaTeA-13" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;RedisConfig&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="40" y="73" width="120" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
