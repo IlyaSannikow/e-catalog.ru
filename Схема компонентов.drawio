@@ -606,26 +606,26 @@
     </mxGraphModel>
   </diagram>
   <diagram id="GhdZ-bbu45mSzrSdn0G2" name="Roles">
-    <mxGraphModel dx="904" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="762" dy="536" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-2" value="Клиент" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-2" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Клиент&lt;/font&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
           <mxGeometry x="10" y="10" width="100" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-3" value="TokenValidation&lt;div&gt;Filter&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-3" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;TokenValidation&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Filter&lt;/font&gt;&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
           <mxGeometry x="150" y="10" width="110" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-4" value="CsrfTokenDecryption&lt;div&gt;Filter&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="300" y="10" width="120" height="550" as="geometry" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-4" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;CsrfTokenDecryption&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;Filter&lt;/font&gt;&lt;/div&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="300" y="10" width="140" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-5" value="SecurityConfig" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="460" y="10" width="100" height="550" as="geometry" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-5" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;SecurityConfig&lt;/font&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="480" y="10" width="100" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-19" value="" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="Q9i13CNsuxpZcweKAqHG-5">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-19" value="" style="html=1;points=[[0,0,0,0,5],[0,1,0,0,-5],[1,0,0,0,5],[1,1,0,0,-5]];perimeter=orthogonalPerimeter;outlineConnect=0;targetShapes=umlLifeline;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="Q9i13CNsuxpZcweKAqHG-5" vertex="1">
           <mxGeometry x="50" y="420" width="10" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-20" value="Проверка&lt;div&gt;роли пользователя&lt;/div&gt;&lt;div&gt;(ADMIN?)&lt;/div&gt;" style="html=1;align=left;spacingLeft=2;endArrow=block;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=0;rounded=0;" edge="1" target="Q9i13CNsuxpZcweKAqHG-19" parent="Q9i13CNsuxpZcweKAqHG-5">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-20" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Проверка&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;роли пользователя&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(ADMIN?)&lt;/font&gt;&lt;/div&gt;" style="html=1;align=left;spacingLeft=2;endArrow=block;rounded=0;edgeStyle=orthogonalEdgeStyle;curved=0;rounded=0;" parent="Q9i13CNsuxpZcweKAqHG-5" target="Q9i13CNsuxpZcweKAqHG-19" edge="1">
           <mxGeometry x="0.1765" y="5" relative="1" as="geometry">
             <mxPoint x="55" y="430" as="sourcePoint" />
             <Array as="points">
@@ -634,89 +634,90 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-6" value="UserDetailService" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="600" y="10" width="110" height="550" as="geometry" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-6" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;UserDetailService&lt;/font&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="600" y="10" width="120" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-7" value="EntityManager" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="750" y="10" width="110" height="550" as="geometry" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-7" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;EntityManager&lt;/font&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="780" y="10" width="110" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-8" value="AdminController" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" vertex="1" parent="1">
-          <mxGeometry x="900" y="10" width="110" height="550" as="geometry" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-8" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;AdminController&lt;/font&gt;" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;dropTarget=0;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;newEdgeStyle={&quot;curved&quot;:0,&quot;rounded&quot;:0};" parent="1" vertex="1">
+          <mxGeometry x="930" y="10" width="110" height="550" as="geometry" />
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-9" value="GET /admin&lt;div&gt;(с токеном)&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="Q9i13CNsuxpZcweKAqHG-3">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-9" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;GET /admin&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;(с токеном)&lt;/font&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" target="Q9i13CNsuxpZcweKAqHG-3" edge="1">
           <mxGeometry x="0.0308" y="-20" width="80" relative="1" as="geometry">
             <mxPoint x="59.5" y="80" as="sourcePoint" />
             <mxPoint x="180" y="80" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-10" value="Проверить токен через&lt;div&gt;JwtDecoder&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-10" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Проверить токен через&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;JwtDecoder&lt;/font&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1" target="Q9i13CNsuxpZcweKAqHG-5">
           <mxGeometry x="0.0308" y="-20" width="80" relative="1" as="geometry">
             <mxPoint x="204.5" y="110" as="sourcePoint" />
             <mxPoint x="509.5" y="110" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-11" value="Валидная&lt;div&gt;аутентификация&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
-          <mxGeometry x="-0.0197" y="12" relative="1" as="geometry">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-11" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Валидная&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;аутентификация&lt;/font&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" parent="1" edge="1" source="Q9i13CNsuxpZcweKAqHG-5">
+          <mxGeometry x="-0.0185" y="15" relative="1" as="geometry">
             <mxPoint x="509.5" y="155" as="sourcePoint" />
             <mxPoint x="204.5" y="155" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-12" value="Передаем запрос" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-12" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Передаем запрос&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1">
           <mxGeometry width="80" relative="1" as="geometry">
             <mxPoint x="204.5" y="192" as="sourcePoint" />
             <mxPoint x="359.5" y="192" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-13" value="Валидация CSRF&lt;div&gt;токена&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="Q9i13CNsuxpZcweKAqHG-5">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-13" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Валидация CSRF&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;токена&lt;/font&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" target="Q9i13CNsuxpZcweKAqHG-5" edge="1">
           <mxGeometry x="-0.0635" y="-20" width="80" relative="1" as="geometry">
-            <mxPoint x="360" y="220" as="sourcePoint" />
-            <mxPoint x="515" y="220" as="targetPoint" />
+            <mxPoint x="369.5" y="215" as="sourcePoint" />
+            <mxPoint x="510" y="215" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-14" value="Токен подтвержден" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1" target="Q9i13CNsuxpZcweKAqHG-4">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-14" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Токен подтвержден&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" parent="1" edge="1">
           <mxGeometry x="-0.0033" relative="1" as="geometry">
-            <mxPoint x="510" y="260" as="sourcePoint" />
-            <mxPoint x="430" y="260" as="targetPoint" />
+            <mxPoint x="529.5" y="265" as="sourcePoint" />
+            <mxPoint x="369.5" y="265" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-15" value="Передаем запрос" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="Q9i13CNsuxpZcweKAqHG-6">
-          <mxGeometry width="80" relative="1" as="geometry">
-            <mxPoint x="360" y="300" as="sourcePoint" />
-            <mxPoint x="440" y="300" as="targetPoint" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-15" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Передаем запрос&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1">
+          <mxGeometry x="0.0035" width="80" relative="1" as="geometry">
+            <mxPoint x="369.5" y="315" as="sourcePoint" />
+            <mxPoint x="654.5" y="315" as="targetPoint" />
+            <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-16" value="Получить информацию&lt;div&gt;о пользователе (JPQL)&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
-          <mxGeometry x="0.0067" y="-15" width="80" relative="1" as="geometry">
-            <mxPoint x="654.5" y="340" as="sourcePoint" />
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-16" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Получить информацию&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 14px;&quot;&gt;о пользователе (JPQL)&lt;/font&gt;&lt;/div&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1" target="Q9i13CNsuxpZcweKAqHG-7">
+          <mxGeometry x="0.0111" y="-15" width="80" relative="1" as="geometry">
+            <mxPoint x="660" y="340" as="sourcePoint" />
             <mxPoint x="804.5" y="340" as="targetPoint" />
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-17" value="USER(username, role, ...)" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-17" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;USER(username, role, ...)&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" parent="1" edge="1" source="Q9i13CNsuxpZcweKAqHG-7">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="804.5" y="385" as="sourcePoint" />
-            <mxPoint x="654.5" y="385" as="targetPoint" />
+            <mxPoint x="660" y="385" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-18" value="UserDetails&lt;br&gt;с authorities" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-18" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;UserDetails&lt;br&gt;с authorities&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1">
           <mxGeometry x="0.0276" y="15" width="80" relative="1" as="geometry">
             <mxPoint x="654.5" y="415" as="sourcePoint" />
-            <mxPoint x="509.5" y="415" as="targetPoint" />
+            <mxPoint x="530" y="415" as="targetPoint" />
             <mxPoint x="1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-22" value="Вызвать обработчик" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" edge="1" parent="1" target="Q9i13CNsuxpZcweKAqHG-8">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-22" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;Вызвать обработчик&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=block;curved=0;rounded=0;" parent="1" edge="1">
           <mxGeometry width="80" relative="1" as="geometry">
-            <mxPoint x="510" y="520" as="sourcePoint" />
-            <mxPoint x="590" y="520" as="targetPoint" />
+            <mxPoint x="529.5" y="525" as="sourcePoint" />
+            <mxPoint x="984.5" y="525" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="Q9i13CNsuxpZcweKAqHG-23" value="200 OK" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" edge="1" parent="1">
+        <mxCell id="Q9i13CNsuxpZcweKAqHG-23" value="&lt;font style=&quot;font-size: 14px;&quot;&gt;200 OK&lt;/font&gt;" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" parent="1" edge="1" source="Q9i13CNsuxpZcweKAqHG-8">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="954.5" y="545" as="sourcePoint" />
             <mxPoint x="59.5" y="545" as="targetPoint" />
